@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "com.shpp.budget.planner"
-    compileSdk = 34
+    compileSdk = Dependencies.compileSdk
 
     defaultConfig {
         applicationId = "com.shpp.budget.planner"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = Dependencies.minSdk
+        targetSdk = Dependencies.targetSdk
+        versionCode = Dependencies.versionCode
+        versionName = Dependencies.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -40,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = Dependencies.kotlinCompilerExtensionVersion
     }
     packaging {
         resources {
@@ -51,19 +51,28 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.core:core-ktx:${Dependencies.coreKtx}")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Dependencies.lifecycleRuntimeKtx}")
+
+    // Jetpack Compose
+    implementation("androidx.activity:activity-compose:${Dependencies.activityCompose}")
+    implementation(platform("androidx.compose:compose-bom:${Dependencies.composeBom}"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // JUnit tests
+    testImplementation("junit:junit:${Dependencies.junit}")
+    androidTestImplementation("androidx.test.ext:junit:${Dependencies.androidJUnit}")
+
+    // Espresso tests
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Dependencies.espressoCore}")
+
+    // Jetpack Compose tests
+    androidTestImplementation(platform("androidx.compose:compose-bom:${Dependencies.composeBom}"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+
 }
