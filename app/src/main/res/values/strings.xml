@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">BudgetPlannerApp</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="sign_in">Sign in</string>
-    <string name="already_a_member">Already a member?</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="create_account">Create Account</string>
+    <string name="sign_up_screen_already_a_member">Already a member?</string>
+    <string name="sign_up_screen_bottom_sign_in_button">Sign in</string>
+    <string name="sign_up_screen_create_account_button">Create Account</string>
+    <string name="sign_up_screen_email_text_field">Email</string>
+    <string name="sign_up_screen_header">Sign Up</string>
+    <string name="sign_up_screen_password_text_field">Password</string>
 </resources>

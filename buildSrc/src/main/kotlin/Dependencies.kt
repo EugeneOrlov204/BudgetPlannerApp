@@ -16,4 +16,5 @@ object Dependencies {
     const val versionName = "1.0"
     const val googleServices = "4.4.1"
     const val firebaseBom = "32.7.2"
+    const val materialIconsExtended = "1.6.2"
 }

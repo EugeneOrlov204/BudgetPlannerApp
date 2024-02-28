@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.shpp.budget.planner.presentation.signUpScreen.SignUpScreen
-import com.shpp.budget.planner.ui.theme.BudgetPlannerAppTheme
+import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

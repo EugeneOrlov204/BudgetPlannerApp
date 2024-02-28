@@ -1,5 +1,6 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,96 +15,92 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HideSource
-import androidx.compose.material.icons.filled.PanoramaFishEye
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.presentation.utils.Constants.PASSWORD_MASK
 
 @Composable
 fun SignUpScreen() {
-    Surface(
+    Box(
         modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.background
-                        )
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background
                     )
                 )
-                .padding(horizontal = 55.dp)
+            )
+            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            Column(
+            Header(
                 modifier = Modifier
+                    .weight(2f)
                     .fillMaxSize()
-            ) {
-                TopPart(
-                    modifier = Modifier
-                        .weight(2f)
-                        .fillMaxSize()
-                )
-                MiddlePart(
-                    modifier = Modifier
-                        .weight(2.5f)
-                        .fillMaxSize()
-                )
-                BottomPart(
-                    modifier = Modifier
-                        .weight(1.5f)
-                        .fillMaxSize()
-                )
-            }
+            )
+            TextFieldsWithButton(
+                modifier = Modifier
+                    .weight(2.5f)
+                    .fillMaxSize()
+            )
+            Footer(
+                modifier = Modifier
+                    .weight(1.5f)
+                    .fillMaxSize()
+            )
         }
     }
 }
 
 @Composable
-fun TopPart(modifier: Modifier = Modifier) {
+fun Header(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(id = R.string.sign_up),
+            text = stringResource(id = R.string.sign_up_screen_header),
             style = MaterialTheme.typography.titleLarge
         )
     }
 }
 
 @Composable
-fun MiddlePart(modifier: Modifier = Modifier) {
-    var emailTextState by remember { mutableStateOf("") }
-    var passwordTextState by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }
+fun TextFieldsWithButton(modifier: Modifier = Modifier) {
+    var emailText by rememberSaveable { mutableStateOf("") }
+    var passwordText by rememberSaveable { mutableStateOf("") }
+    var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
@@ -112,13 +109,13 @@ fun MiddlePart(modifier: Modifier = Modifier) {
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
-            value = emailTextState,
+                .height(dimensionResource(id = R.dimen.sign_up_screen_text_field_height)),
+            value = emailText,
             onValueChange = {
-                emailTextState = it
+                emailText = it
             },
             singleLine = true,
-            label = { Text(text = stringResource(id = R.string.email)) },
+            label = { Text(text = stringResource(id = R.string.sign_up_screen_email_text_field)) },
             colors = TextFieldDefaults.colors(
                 focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                 focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
@@ -127,18 +124,18 @@ fun MiddlePart(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
         )
 
-        Spacer(modifier = Modifier.size(25.dp))
+        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_fields)))
 
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
-            value = passwordTextState,
+                .height(dimensionResource(id = R.dimen.sign_up_screen_text_field_height)),
+            value = passwordText,
             onValueChange = {
-                passwordTextState = it
+                passwordText = it
             },
             singleLine = true,
-            label = { Text(text = stringResource(id = R.string.password)) },
+            label = { Text(text = stringResource(id = R.string.sign_up_screen_password_text_field)) },
             colors = TextFieldDefaults.colors(
                 focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                 focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
@@ -146,10 +143,11 @@ fun MiddlePart(modifier: Modifier = Modifier) {
             ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             visualTransformation =
-            if (isPasswordVisible)
+            if (isPasswordVisible) {
                 VisualTransformation.None
-            else
-                PasswordVisualTransformation('*'),
+            } else {
+                PasswordVisualTransformation(PASSWORD_MASK)
+            },
             trailingIcon = {
                 IconButton(
                     onClick = {
@@ -157,31 +155,32 @@ fun MiddlePart(modifier: Modifier = Modifier) {
                     }) {
                     Icon(
                         imageVector =
-                        if (isPasswordVisible)
-                            Icons.Filled.PanoramaFishEye
-                        else
-                            Icons.Filled.HideSource,
+                        if (isPasswordVisible) {
+                            Icons.Filled.Visibility
+                        } else {
+                            Icons.Filled.VisibilityOff
+                        },
                         contentDescription = null
                     )
                 }
             }
         )
 
-        Spacer(modifier = Modifier.size(25.dp))
+        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_field_and_button)))
 
         ElevatedButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(8.dp),
+                .height(dimensionResource(id = R.dimen.sign_up_screen_button_height)),
+            shape = RoundedCornerShape(dimensionResource(id = R.dimen.sign_up_screen_button_corner_radius)),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary
             ),
-            elevation = ButtonDefaults.buttonElevation(4.dp),
+            elevation = ButtonDefaults.buttonElevation(dimensionResource(id = R.dimen.sign_up_screen_button_elevation)),
             onClick = { /*TODO*/ }
         ) {
             Text(
-                text = stringResource(id = R.string.create_account),
+                text = stringResource(id = R.string.sign_up_screen_create_account_button),
                 color = MaterialTheme.colorScheme.onSecondary,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -191,27 +190,70 @@ fun MiddlePart(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BottomPart(modifier: Modifier = Modifier) {
+fun Footer(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(id = R.string.already_a_member),
+            text = stringResource(id = R.string.sign_up_screen_already_a_member),
             style = MaterialTheme.typography.bodyMedium
         )
-        Spacer(modifier = Modifier.size(8.dp))
+        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_default_padding)))
         Text(
             modifier = Modifier
                 .clickable {
                     // TODO:  
                 },
-            text = stringResource(id = R.string.sign_in),
+            text = stringResource(id = R.string.sign_up_screen_bottom_sign_in_button),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight(600),
             color = MaterialTheme.colorScheme.primary,
             fontSize = 24.sp
         )
     }
+}
+
+
+@Preview(
+    name = "Light theme",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Composable
+fun SignUpScreenPreviewLight() {
+    SignUpScreen()
+}
+
+@Preview(
+    name = "Dark theme",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showBackground = true
+)
+@Composable
+fun SignUpScreenPreviewDark() {
+    SignUpScreen()
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 640,
+    name = "Small Screen"
+)
+@Composable
+fun SignUpScreenPreviewSmall() {
+    SignUpScreen()
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 480,
+    heightDp = 800,
+    name = "Large Screen"
+)
+@Composable
+fun SignUpScreenPreviewLightLarge() {
+    SignUpScreen()
 }

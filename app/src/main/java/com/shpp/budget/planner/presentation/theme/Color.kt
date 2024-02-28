@@ -1,4 +1,4 @@
-package com.shpp.budget.planner.ui.theme
+package com.shpp.budget.planner.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
