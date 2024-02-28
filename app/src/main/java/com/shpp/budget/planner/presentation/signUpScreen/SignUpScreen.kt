@@ -1,6 +1,5 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,14 +34,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
 import com.shpp.budget.planner.R
-import com.shpp.budget.planner.presentation.utils.Constants.PASSWORD_MASK
+import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
 fun SignUpScreen() {
@@ -154,12 +153,7 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier) {
                         isPasswordVisible = !isPasswordVisible
                     }) {
                     Icon(
-                        imageVector =
-                        if (isPasswordVisible) {
-                            Icons.Filled.Visibility
-                        } else {
-                            Icons.Filled.VisibilityOff
-                        },
+                        imageVector = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = null
                     )
                 }
@@ -208,52 +202,17 @@ fun Footer(modifier: Modifier = Modifier) {
                 },
             text = stringResource(id = R.string.sign_up_screen_bottom_sign_in_button),
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight(600),
+            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
             color = MaterialTheme.colorScheme.primary,
-            fontSize = 24.sp
+            fontSize = dimensionResource(id = R.dimen.sign_up_screen_footer_button_text_size).value.sp
         )
     }
 }
 
 
-@Preview(
-    name = "Light theme",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true
-)
+@PreviewLightDark
+@PreviewScreenSizes
 @Composable
 fun SignUpScreenPreviewLight() {
-    SignUpScreen()
-}
-
-@Preview(
-    name = "Dark theme",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    showBackground = true
-)
-@Composable
-fun SignUpScreenPreviewDark() {
-    SignUpScreen()
-}
-
-@Preview(
-    showBackground = true,
-    widthDp = 360,
-    heightDp = 640,
-    name = "Small Screen"
-)
-@Composable
-fun SignUpScreenPreviewSmall() {
-    SignUpScreen()
-}
-
-@Preview(
-    showBackground = true,
-    widthDp = 480,
-    heightDp = 800,
-    name = "Large Screen"
-)
-@Composable
-fun SignUpScreenPreviewLightLarge() {
     SignUpScreen()
 }
