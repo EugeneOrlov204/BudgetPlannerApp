@@ -82,4 +82,7 @@ dependencies {
     // Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
 
+
+    // Material Icons extended
+    implementation("androidx.compose.material:material-icons-extended:${Dependencies.materialIconsExtended}")
 }
