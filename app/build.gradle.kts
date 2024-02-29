@@ -1,4 +1,6 @@
 plugins {
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
@@ -65,6 +67,16 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //Hilt
+    implementation("com.google.dagger:hilt-android:${Dependencies.hiltVersion}")
+    kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hiltVersion}")
+
+    //Navigation
+    implementation("androidx.navigation:navigation-compose:${Dependencies.navVersion}")
+
+    //Hilt+Navigation
+    implementation("androidx.hilt:hilt-navigation-compose:${Dependencies.hiltNavVersion}")
+
     // JUnit tests
     testImplementation("junit:junit:${Dependencies.junit}")
     androidTestImplementation("androidx.test.ext:junit:${Dependencies.androidJUnit}")
@@ -82,7 +94,10 @@ dependencies {
     // Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
 
-
     // Material Icons extended
     implementation("androidx.compose.material:material-icons-extended:${Dependencies.materialIconsExtended}")
+}
+
+kapt {
+    correctErrorTypes = true
 }
