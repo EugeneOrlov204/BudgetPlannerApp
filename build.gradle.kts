@@ -3,4 +3,5 @@ plugins {
     id("com.android.application") version Dependencies.androidGradlePlugin apply false
     id("org.jetbrains.kotlin.android") version Dependencies.kotlin apply false
     id("com.google.gms.google-services") version Dependencies.googleServices apply false
+    id("com.google.dagger.hilt.android") version Dependencies.hiltVersion apply false
 }

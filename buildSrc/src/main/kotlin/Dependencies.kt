@@ -17,4 +17,7 @@ object Dependencies {
     const val googleServices = "4.4.1"
     const val firebaseBom = "32.7.2"
     const val materialIconsExtended = "1.6.2"
+    const val navVersion = "2.7.7"
+    const val hiltVersion = "2.50"
+    const val hiltNavVersion = "1.2.0"
 }

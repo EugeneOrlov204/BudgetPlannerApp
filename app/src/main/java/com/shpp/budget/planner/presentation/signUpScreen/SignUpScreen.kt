@@ -1,9 +1,10 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,11 +43,21 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
-fun SignUpScreen() {
-    Box(
+fun SignUpScreen(onLoggedIn: () -> Unit) {
+    val context = LocalContext.current
+    BackHandler {
+        (context as ComponentActivity).moveTaskToBack(true)
+    }
+    SignUpScreenContent()
+}
+
+@Composable
+fun SignUpScreenContent() {
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
@@ -58,26 +70,21 @@ fun SignUpScreen() {
             )
             .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding))
     ) {
-        Column(
+        Header(
             modifier = Modifier
+                .weight(2f)
                 .fillMaxSize()
-        ) {
-            Header(
-                modifier = Modifier
-                    .weight(2f)
-                    .fillMaxSize()
-            )
-            TextFieldsWithButton(
-                modifier = Modifier
-                    .weight(2.5f)
-                    .fillMaxSize()
-            )
-            Footer(
-                modifier = Modifier
-                    .weight(1.5f)
-                    .fillMaxSize()
-            )
-        }
+        )
+        TextFieldsWithButton(
+            modifier = Modifier
+                .weight(2.5f)
+                .fillMaxSize()
+        )
+        Footer(
+            modifier = Modifier
+                .weight(1.5f)
+                .fillMaxSize()
+        )
     }
 }
 
@@ -214,5 +221,7 @@ fun Footer(modifier: Modifier = Modifier) {
 @PreviewScreenSizes
 @Composable
 fun SignUpScreenPreviewLight() {
-    SignUpScreen()
+    BudgetPlannerAppTheme {
+        SignUpScreenContent()
+    }
 }
