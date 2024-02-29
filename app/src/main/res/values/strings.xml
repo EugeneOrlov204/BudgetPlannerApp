@@ -1,9 +1,26 @@
 <resources>
+
     <string name="app_name">BudgetPlannerApp</string>
+    <!-- Sign Up screen -->
     <string name="sign_up_screen_already_a_member">Already a member?</string>
     <string name="sign_up_screen_bottom_sign_in_button">Sign in</string>
     <string name="sign_up_screen_create_account_button">Create Account</string>
     <string name="sign_up_screen_email_text_field">Email</string>
     <string name="sign_up_screen_header">Sign Up</string>
     <string name="sign_up_screen_password_text_field">Password</string>
+
+    <!-- Sign Up screen -->
+
+    <string name="sign_in">Sign in\n</string>
+    <string name="email">Email\n</string>
+    <string name="password">Password\n</string>
+    <string name="hide_password_icon_description">Hide password</string>
+    <string name="show_password_icon_description">Show password</string>
+    <string name="input_password_error">Incorrect password</string>
+    <string name="sign_up_with_google_label">Or sign up using</string>
+    <string name="google_icon_description">Google icon</string>
+    <string name="google_sign_up_button_text">Google</string>
+    <string name="sign_up_button_label">Don’t have an account yet?</string>
+    <string name="sign_up_button_text">Sign Up</string>
+
 </resources>
