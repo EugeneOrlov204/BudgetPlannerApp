@@ -9,11 +9,10 @@
     <string name="sign_up_screen_header">Sign Up</string>
     <string name="sign_up_screen_password_text_field">Password</string>
 
-    <!-- Sign Up screen -->
-
-    <string name="sign_in">Sign in\n</string>
-    <string name="email">Email\n</string>
-    <string name="password">Password\n</string>
+    <!-- Sign In screen -->
+    <string name="sign_in">Sign in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
     <string name="hide_password_icon_description">Hide password</string>
     <string name="show_password_icon_description">Show password</string>
     <string name="input_password_error">Incorrect password</string>

@@ -8,7 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="sign_up_screen_top_gradient">#CFE4D9</color>
-    <color name="google_sign_up_label_text_color">#707974</color>
+
 
 </resources>

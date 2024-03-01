@@ -3,10 +3,8 @@ package com.shpp.budget.planner.presentation.signInScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,40 +32,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shpp.budget.planner.R
-import com.shpp.budget.planner.presentation.utils.fontDimensionResource
 
-@Preview(
-    showSystemUi = true
-)
+
 @Composable
-fun SignInScreen() {
+fun SignInScreen(onLoggedIn: () -> Boolean, onSignUp: () -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
                     listOf(
-                        colorResource(R.color.sign_up_screen_top_gradient),
-                        Color.White
+                        MaterialTheme.colorScheme.surface,
+                         MaterialTheme.colorScheme.background
                     )
                 )
-            ),
+            )
+            .padding(horizontal = dimensionResource(id = R.dimen.sign_in_screen_main_column_padding)),
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -90,7 +80,8 @@ fun SignInScreen() {
         SignUp(
             Modifier
                 .fillMaxSize()
-                .weight(1f)
+                .weight(1f),
+            onSignUp
         )
     }
 }
@@ -100,14 +91,12 @@ fun SignInScreen() {
 fun Header(modifier: Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.Bottom,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.sign_in),
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily(Font(R.font.roboto)),
-            fontSize = fontDimensionResource(R.dimen.big_text_size)
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }
@@ -125,7 +114,6 @@ fun InputFields(modifier: Modifier) {
             label = { Text(text = stringResource(R.string.email)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = dimensionResource(R.dimen.input_field_buttons_horizontal_padding))
         )
         OutlinedTextField(
             value = password, onValueChange = {
@@ -135,8 +123,7 @@ fun InputFields(modifier: Modifier) {
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier
                 .offset(y = dimensionResource(R.dimen.divide_input_fields_space))
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(R.dimen.input_field_buttons_horizontal_padding)),
+                .fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             trailingIcon = {
                 val iconImage = if (passwordVisible) Icons.Filled.Visibility
@@ -158,14 +145,15 @@ fun InputFields(modifier: Modifier) {
                 }
             }
         )
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.sign_in_button_offset)))
+        Spacer(
+            modifier = Modifier.height(dimensionResource(R.dimen.sign_in_screen_padding_between_text_field_and_button))
+        )
         Button(
             onClick = { /*TODO*/ },
             shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(dimensionResource(R.dimen.sign_in_button_height))
-                .padding(horizontal = dimensionResource(R.dimen.input_field_buttons_horizontal_padding)),
+                .height(dimensionResource(R.dimen.sign_in_button_height)),
             colors = ButtonDefaults.buttonColors(
                 MaterialTheme.colorScheme.primary
             )
@@ -173,9 +161,7 @@ fun InputFields(modifier: Modifier) {
 
             Text(
                 text = stringResource(id = R.string.sign_in),
-                fontSize = fontDimensionResource(R.dimen.sign_in_button_text_size),
-                fontWeight = FontWeight(500),
-                fontFamily = FontFamily(Font(R.font.roboto)),
+                style = MaterialTheme.typography.titleMedium,
                 color = Color.White
             )
         }
@@ -190,17 +176,14 @@ fun SignInWithGoogle(modifier: Modifier) {
     ) {
         Text(
             text = stringResource(R.string.sign_up_with_google_label),
-            fontFamily = FontFamily(Font(R.font.roboto)),
-            fontSize = fontDimensionResource(R.dimen.medium_text_size),
-            fontWeight = FontWeight(500),
-            color = colorResource(R.color.google_sign_up_label_text_color)
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.bodyLarge
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.small_spacer)))
         Button(
             onClick = { },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(R.dimen.input_field_buttons_horizontal_padding)),
+                .fillMaxWidth(),
             shape = RoundedCornerShape(dimensionResource(R.dimen.extra_small_corner_radius)),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.White
@@ -213,10 +196,8 @@ fun SignInWithGoogle(modifier: Modifier) {
             )
             Text(
                 text = stringResource(R.string.google_sign_up_button_text),
-                color = colorResource(id = R.color.google_sign_up_label_text_color),
-                fontFamily = FontFamily(Font(R.font.roboto)),
-                fontSize = fontDimensionResource(R.dimen.medium_text_size),
-                fontWeight = FontWeight.Normal
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.bodyLarge
             )
 
         }
@@ -224,17 +205,14 @@ fun SignInWithGoogle(modifier: Modifier) {
 }
 
 @Composable
-fun SignUp(modifier: Modifier) {
-
+fun SignUp(modifier: Modifier, onSignUp: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
             text = stringResource(R.string.sign_up_button_label),
-            fontSize = 16.sp,
-            fontWeight = FontWeight(500),
-            fontFamily = FontFamily(Font(R.font.roboto)),
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.small_spacer)))
@@ -242,12 +220,11 @@ fun SignUp(modifier: Modifier) {
             text = buildAnnotatedString {
                 append(stringResource(R.string.sign_up_button_text))
             },
-            onClick = { },
+            onClick = { onSignUp() },
             style = TextStyle(
-                fontSize = fontDimensionResource(R.dimen.advanced_text_sze),
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.roboto)),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = dimensionResource(id = R.dimen.sign_up_screen_footer_button_text_size).value.sp
             )
         )
     }

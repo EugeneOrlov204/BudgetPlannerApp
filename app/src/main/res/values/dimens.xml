@@ -17,17 +17,15 @@
     <!-- Sign in screen -->
     <!-- Views -->
     <dimen name="divide_input_fields_space">22sp</dimen>
-    <dimen name="input_field_buttons_horizontal_padding">54dp</dimen>
-    <dimen name="sign_in_button_offset">54dp</dimen>
+    <dimen name="sign_in_screen_main_column_padding">55dp</dimen>
     <dimen name="small_corner_radius">8dp</dimen>
     <dimen name="extra_small_corner_radius">6dp</dimen>
     <dimen name="sign_in_button_height">48dp</dimen>
     <dimen name="small_spacer">16dp</dimen>
     <dimen name="small_padding">16dp</dimen>
+    <dimen name="sign_in_screen_padding_between_text_field_and_button">50dp</dimen>
     <!-- Texts -->
-    <dimen name="medium_text_size">16sp</dimen>
-    <dimen name="advanced_text_sze">16dsp</dimen>
-    <dimen name="big_text_size">32sp</dimen>
-    <dimen name="sign_in_button_text_size">18sp</dimen>
+    <dimen name="sign_in_screen_button_sign_up_size">24sp</dimen>
+
 
 </resources>
