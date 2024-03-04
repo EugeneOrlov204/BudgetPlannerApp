@@ -14,4 +14,9 @@
     <!-- Texts -->
     <dimen name="sign_up_screen_footer_button_text_size">24sp</dimen>
 
+    <!-- Home screen -->
+    <dimen name="home_screen_bottom_bar_padding_vertical">30dp</dimen>
+    <dimen name="home_screen_central_button_icon_size">24dp</dimen>
+    <dimen name="home_screen_central_button_padding">12dp</dimen>
+    <dimen name="top_app_bar_padding_vertical">32dp</dimen>
 </resources>
