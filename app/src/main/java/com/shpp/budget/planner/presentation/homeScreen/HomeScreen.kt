@@ -16,6 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
 @Composable
@@ -41,7 +43,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onLoggedOut: () -> Un
 @Composable
 fun HomeScreenContent() {
     Box(modifier = Modifier.fillMaxSize()) {
-        Text("Home")
+        Text(Firebase.auth.currentUser?.email ?: "no email")
     }
 }
 

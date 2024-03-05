@@ -1,10 +1,12 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -42,21 +46,43 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
-fun SignUpScreen(onLoggedIn: () -> Unit) {
+fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel(), onLoggedIn: () -> Unit) {
     val context = LocalContext.current
+    val registerState = viewModel.registerState.collectAsState()
+
+    if (registerState.value.state) {
+        onLoggedIn()
+    }
+    if (!registerState.value.error.isNullOrBlank()) {
+        Toast.makeText(
+            context,
+            registerState.value.error,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
     BackHandler {
         (context as ComponentActivity).moveTaskToBack(true)
     }
-    SignUpScreenContent()
+    Box {
+        SignUpScreenContent { email, password ->
+            viewModel.registerUser(email, password)
+        }
+        if (registerState.value.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.BottomCenter))
+        }
+
+    }
 }
 
 @Composable
-fun SignUpScreenContent() {
+fun SignUpScreenContent(onSignUpClick: (String, String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +94,8 @@ fun SignUpScreenContent() {
                     )
                 )
             )
-            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding))
+            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding)),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
             modifier = Modifier
@@ -78,7 +105,11 @@ fun SignUpScreenContent() {
         TextFieldsWithButton(
             modifier = Modifier
                 .weight(2.5f)
-                .fillMaxSize()
+                .fillMaxWidth(0.9f),
+            //.fillMaxSize(),
+            onSignUpClick = { email, password ->
+                onSignUpClick(email, password)
+            }
         )
         Footer(
             modifier = Modifier
@@ -103,7 +134,7 @@ fun Header(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TextFieldsWithButton(modifier: Modifier = Modifier) {
+fun TextFieldsWithButton(modifier: Modifier = Modifier, onSignUpClick: (String, String) -> Unit) {
     var emailText by rememberSaveable { mutableStateOf("") }
     var passwordText by rememberSaveable { mutableStateOf("") }
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
@@ -178,7 +209,9 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier) {
                 containerColor = MaterialTheme.colorScheme.secondary
             ),
             elevation = ButtonDefaults.buttonElevation(dimensionResource(id = R.dimen.sign_up_screen_button_elevation)),
-            onClick = { /*TODO*/ }
+            onClick = {
+                onSignUpClick(emailText, passwordText)
+            }
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up_screen_create_account_button),
@@ -222,6 +255,6 @@ fun Footer(modifier: Modifier = Modifier) {
 @Composable
 fun SignUpScreenPreviewLight() {
     BudgetPlannerAppTheme {
-        SignUpScreenContent()
+        SignUpScreenContent { _, _ -> }
     }
 }

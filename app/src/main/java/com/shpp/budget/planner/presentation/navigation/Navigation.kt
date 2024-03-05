@@ -15,9 +15,12 @@ fun Navigation() {
         composable(Screen.Home.route) {
             HomeScreen(onLoggedOut = { navController.navigate(Screen.Auth.route) })
         }
-        navigation(route = Screen.Auth.route, startDestination = Screen.Auth.SignIn.route) {
-            composable(Screen.Auth.SignIn.route) {
-                SignUpScreen(onLoggedIn = { navController.popBackStack(Screen.Auth.route, true) })
+        navigation(route = Screen.Auth.route, startDestination = Screen.Auth.SignUp.route) {
+            composable(Screen.Auth.SignUp.route) {
+                SignUpScreen(onLoggedIn = {
+                    navController.popBackStack(Screen.Auth.route, true)
+                    navController.navigate(Screen.Home.route)
+                })
             }
         }
     }

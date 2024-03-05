@@ -6,4 +6,5 @@
     <string name="sign_up_screen_email_text_field">Email</string>
     <string name="sign_up_screen_header">Sign Up</string>
     <string name="sign_up_screen_password_text_field">Password</string>
+    <string name="sign_up_user_already_registered">This user is already exists</string>
 </resources>
