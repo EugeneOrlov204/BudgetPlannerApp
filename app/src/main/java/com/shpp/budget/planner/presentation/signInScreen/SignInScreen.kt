@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,7 +45,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
 import com.shpp.budget.planner.R
-import com.shpp.budget.planner.presentation.signUpScreen.SignUpScreenContent
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
 
@@ -56,12 +54,12 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 fun previewSignInScreen()
 {
     BudgetPlannerAppTheme {
-        SignInScreen({false},{})
+        SignInScreen({},{})
     }
 }
 
 @Composable
-fun SignInScreen(onLoggedIn: () -> Boolean, onSignUp: () -> Unit) {
+fun SignInScreen(onLoggedIn: () -> Unit, onSignUp: () -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
