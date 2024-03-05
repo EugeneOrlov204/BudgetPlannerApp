@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,9 +42,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.presentation.signUpScreen.SignUpScreenContent
+import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
+
+@PreviewLightDark
+@PreviewScreenSizes
+@Composable
+fun previewSignInScreen()
+{
+    BudgetPlannerAppTheme {
+        SignInScreen({false},{})
+    }
+}
 
 @Composable
 fun SignInScreen(onLoggedIn: () -> Boolean, onSignUp: () -> Unit) {
@@ -54,11 +69,11 @@ fun SignInScreen(onLoggedIn: () -> Boolean, onSignUp: () -> Unit) {
                 brush = Brush.linearGradient(
                     listOf(
                         MaterialTheme.colorScheme.surface,
-                         MaterialTheme.colorScheme.background
+                        MaterialTheme.colorScheme.background
                     )
                 )
             )
-            .padding(horizontal = dimensionResource(id = R.dimen.sign_in_screen_main_column_padding)),
+         ,
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -69,12 +84,14 @@ fun SignInScreen(onLoggedIn: () -> Boolean, onSignUp: () -> Unit) {
         )
         InputFields(
             Modifier
-                .fillMaxSize()
+                .fillMaxHeight()
+                .fillMaxWidth(0.9f)
                 .weight(3f)
         )
         SignInWithGoogle(
             Modifier
-                .fillMaxSize()
+                .fillMaxHeight()
+                .fillMaxWidth(0.9f)
                 .weight(1.5f)
         )
         SignUp(
@@ -145,9 +162,7 @@ fun InputFields(modifier: Modifier) {
                 }
             }
         )
-        Spacer(
-            modifier = Modifier.height(dimensionResource(R.dimen.sign_in_screen_padding_between_text_field_and_button))
-        )
+         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         Button(
             onClick = { /*TODO*/ },
             shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
@@ -162,7 +177,7 @@ fun InputFields(modifier: Modifier) {
             Text(
                 text = stringResource(id = R.string.sign_in),
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White
+                color = MaterialTheme.colorScheme.background
             )
         }
     }
@@ -186,7 +201,7 @@ fun SignInWithGoogle(modifier: Modifier) {
                 .fillMaxWidth(),
             shape = RoundedCornerShape(dimensionResource(R.dimen.extra_small_corner_radius)),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White
+                containerColor = MaterialTheme.colorScheme.background
             )
         ) {
             Image(
