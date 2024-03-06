@@ -19,13 +19,15 @@ private val DarkColorScheme = darkColorScheme(
     primary = secondary,
     onPrimary = defaultTextColor,
     secondary = primary,
-)
+    tertiary = clickableTextColor
+    )
 
 private val LightColorScheme = lightColorScheme(
     primary = secondary,
     onPrimary = defaultTextColor,
     secondary = primary,
-
+    surface = surfaceTopGradient,
+    tertiary = clickableTextColor
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),

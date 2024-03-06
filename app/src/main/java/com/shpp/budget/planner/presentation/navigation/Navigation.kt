@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.shpp.budget.planner.presentation.homeScreen.HomeScreen
+import com.shpp.budget.planner.presentation.signInScreen.SignInScreen
 import com.shpp.budget.planner.presentation.signUpScreen.SignUpScreen
 
 @Composable
@@ -16,9 +17,16 @@ fun Navigation() {
             HomeScreen(onLoggedOut = { navController.navigate(Screen.Auth.route) })
         }
         navigation(route = Screen.Auth.route, startDestination = Screen.Auth.SignIn.route) {
-            composable(Screen.Auth.SignIn.route) {
+            composable(Screen.Auth.SignUp.route) {
                 SignUpScreen(onLoggedIn = { navController.popBackStack(Screen.Auth.route, true) })
             }
+            composable(Screen.Auth.SignIn.route) {
+                SignInScreen(onLoggedIn = { navController.popBackStack(Screen.Auth.route, true) },
+                    onSignUp = { navController.navigate(Screen.Auth.SignUp.route) }
+                )
+            }
+
         }
+
     }
 }
