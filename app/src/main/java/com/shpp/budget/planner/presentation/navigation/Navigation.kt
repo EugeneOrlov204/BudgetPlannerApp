@@ -22,6 +22,12 @@ fun Navigation() {
                     navController.navigate(Screen.Home.route)
                 })
             }
+            composable(Screen.Auth.SignIn.route) {
+                SignInScreen(onLoggedIn = { navController.popBackStack(Screen.Auth.route, true) },
+                    onSignUp = { navController.navigate(Screen.Auth.SignUp.route) }
+                )
+            }
+
         }
     }
 }

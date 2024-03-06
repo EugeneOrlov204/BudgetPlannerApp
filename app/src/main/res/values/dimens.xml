@@ -14,4 +14,16 @@
     <!-- Texts -->
     <dimen name="sign_up_screen_footer_button_text_size">24sp</dimen>
 
+    <!-- Sign in screen -->
+    <!-- Views -->
+    <dimen name="divide_input_fields_space">22dp</dimen>
+    <dimen name="small_corner_radius">8dp</dimen>
+    <dimen name="extra_small_corner_radius">6dp</dimen>
+    <dimen name="sign_in_button_height">48dp</dimen>
+    <dimen name="small_spacer">16dp</dimen>
+    <dimen name="small_padding">16dp</dimen>
+    <!-- Texts -->
+    <dimen name="sign_in_screen_button_sign_up_size">24sp</dimen>
+
+
 </resources>
