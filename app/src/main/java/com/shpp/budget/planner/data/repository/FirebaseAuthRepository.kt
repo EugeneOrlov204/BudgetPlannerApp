@@ -21,7 +21,18 @@ class FirebaseAuthRepository @Inject constructor() : AuthRepository {
             try {
                 emit(Resource.Loading(true))
                 Firebase.auth.createUserWithEmailAndPassword(email, password).await()
-                Firebase.auth.currentUser
+                emit(Resource.Success())
+            } catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage))
+            }
+        }
+    }
+
+    override suspend fun loginUser(email: String, password: String): Flow<Resource<Unit>> {
+        return flow {
+            try {
+                emit(Resource.Loading(true))
+                Firebase.auth.signInWithEmailAndPassword(email, password).await()
                 emit(Resource.Success())
             } catch (e: Exception) {
                 emit(Resource.Error(e.localizedMessage))

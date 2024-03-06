@@ -1,8 +1,8 @@
-package com.shpp.budget.planner.presentation.signUpScreen
+package com.shpp.budget.planner.presentation.signInScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shpp.budget.planner.domain.useCases.auth.RegisterUserUseCase
+import com.shpp.budget.planner.domain.useCases.auth.LoginUserUseCase
 import com.shpp.budget.planner.presentation.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,19 +13,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
-    private val registerUserUseCase: RegisterUserUseCase
+class SignInViewModel @Inject constructor(
+    private val loginUserUseCase: LoginUserUseCase
 ) : ViewModel() {
 
-    private val _registerState = MutableStateFlow(SignUpState())
-    val registerState = _registerState.asStateFlow()
+    private val _loginState = MutableStateFlow(SignInState())
+    val loginState = _loginState.asStateFlow()
 
-    fun registerUser(email: String, password: String) {
+    fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            registerUserUseCase(email, password).collectLatest { resource ->
+            loginUserUseCase(email, password).collectLatest { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        _registerState.update {
+                        _loginState.update {
                             it.copy(
                                 isLoading = false,
                                 state = true,
@@ -34,7 +34,7 @@ class SignUpViewModel @Inject constructor(
                         }
                     }
                     is Resource.Error -> {
-                        _registerState.update {
+                        _loginState.update {
                             it.copy(
                                 isLoading = false,
                                 state = false,
@@ -43,7 +43,7 @@ class SignUpViewModel @Inject constructor(
                         }
                     }
                     is Resource.Loading -> {
-                        _registerState.update {
+                        _loginState.update {
                             it.copy(
                                 isLoading = true,
                                 error = null

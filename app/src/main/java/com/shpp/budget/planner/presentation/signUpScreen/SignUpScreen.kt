@@ -52,7 +52,7 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
-fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel(), onLoggedIn: () -> Unit) {
+fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel(), onLoggedIn: () -> Unit, onSignIn: () -> Unit) {
     val context = LocalContext.current
     val registerState = viewModel.registerState.collectAsState()
 
@@ -71,9 +71,14 @@ fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel(), onLoggedIn: () ->
         (context as ComponentActivity).moveTaskToBack(true)
     }
     Box {
-        SignUpScreenContent { email, password ->
-            viewModel.registerUser(email, password)
-        }
+        SignUpScreenContent(
+            onSignUpClick = { email, password ->
+                viewModel.registerUser(email, password)
+            },
+            onSignIn = {
+                onSignIn()
+            }
+        )
         if (registerState.value.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.BottomCenter))
         }
@@ -82,7 +87,7 @@ fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel(), onLoggedIn: () ->
 }
 
 @Composable
-fun SignUpScreenContent(onSignUpClick: (String, String) -> Unit) {
+fun SignUpScreenContent(onSignUpClick: (String, String) -> Unit, onSignIn: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -115,7 +120,9 @@ fun SignUpScreenContent(onSignUpClick: (String, String) -> Unit) {
             modifier = Modifier
                 .weight(1.5f)
                 .fillMaxSize()
-        )
+        ) {
+            onSignIn()
+        }
     }
 }
 
@@ -224,7 +231,7 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier, onSignUpClick: (String, 
 }
 
 @Composable
-fun Footer(modifier: Modifier = Modifier) {
+fun Footer(modifier: Modifier = Modifier, onSignIn: () -> Unit) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -238,7 +245,7 @@ fun Footer(modifier: Modifier = Modifier) {
         Text(
             modifier = Modifier
                 .clickable {
-                    // TODO:  
+                    onSignIn()
                 },
             text = stringResource(id = R.string.sign_up_screen_bottom_sign_in_button),
             style = MaterialTheme.typography.titleMedium,
@@ -255,6 +262,6 @@ fun Footer(modifier: Modifier = Modifier) {
 @Composable
 fun SignUpScreenPreviewLight() {
     BudgetPlannerAppTheme {
-        SignUpScreenContent { _, _ -> }
+        SignUpScreenContent ({_, _ ->}, {})
     }
 }

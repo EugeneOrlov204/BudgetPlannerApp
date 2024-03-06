@@ -1,5 +1,8 @@
 package com.shpp.budget.planner.presentation.signInScreen
 
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -32,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +49,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
@@ -51,15 +57,44 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 @PreviewLightDark
 @PreviewScreenSizes
 @Composable
-fun previewSignInScreen()
+fun PreviewSignInScreen()
 {
     BudgetPlannerAppTheme {
-        SignInScreen({},{})
+        SignInScreenContent({_, _ ->},{})
     }
 }
 
 @Composable
-fun SignInScreen(onLoggedIn: () -> Unit, onSignUp: () -> Unit) {
+fun SignInScreen(viewModel: SignInViewModel = hiltViewModel(), onLoggedIn: () -> Unit, onSignUp: () -> Unit) {
+    val context = LocalContext.current
+    val loginState = viewModel.loginState.collectAsState()
+
+    if (loginState.value.state) {
+        onLoggedIn()
+    }
+    if (!loginState.value.error.isNullOrBlank()) {
+        Toast.makeText(
+            context,
+            loginState.value.error,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    BackHandler {
+        (context as ComponentActivity).moveTaskToBack(true)
+    }
+    SignInScreenContent(
+        onLoggedIn = { email, password ->
+            viewModel.loginUser(email, password)
+        },
+        onSignUp = {
+            onSignUp()
+        }
+    )
+}
+
+@Composable
+fun SignInScreenContent(onLoggedIn: (String, String) -> Unit, onSignUp: () -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
@@ -85,7 +120,9 @@ fun SignInScreen(onLoggedIn: () -> Unit, onSignUp: () -> Unit) {
                 .fillMaxHeight()
                 .fillMaxWidth(0.9f)
                 .weight(3f)
-        )
+        ) { email, password ->
+            onLoggedIn(email, password)
+        }
         SignInWithGoogle(
             Modifier
                 .fillMaxHeight()
@@ -117,7 +154,7 @@ fun Header(modifier: Modifier) {
 }
 
 @Composable
-fun InputFields(modifier: Modifier) {
+fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -162,7 +199,9 @@ fun InputFields(modifier: Modifier) {
         )
          Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                   onLoggedIn(email, password)
+            },
             shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
             modifier = Modifier
                 .fillMaxWidth()

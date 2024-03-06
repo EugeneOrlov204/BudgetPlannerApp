@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     fun getIsUserLoggedIn(): Flow<Boolean>
     suspend fun registerUser(email: String, password: String): Flow<Resource<Unit>>
+    suspend fun loginUser(email: String, password: String): Flow<Resource<Unit>>
 }
