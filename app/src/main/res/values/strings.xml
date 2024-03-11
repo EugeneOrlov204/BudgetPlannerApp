@@ -30,5 +30,6 @@
     <string name="expense_screen_brd_account">BRD account</string>
     <string name="expense_screen_cash_transactions_title">Cash</string>
     <string name="expense_screen_ing_transactions_title">ING</string>
+    <string name="expense_screen_to_transaction_screen_button_text">See all</string>
 
 </resources>
