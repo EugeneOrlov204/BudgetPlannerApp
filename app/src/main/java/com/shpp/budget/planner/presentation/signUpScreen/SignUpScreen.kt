@@ -1,8 +1,6 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +27,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,42 +52,45 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
-fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel(), onLoggedIn: () -> Unit, onSignIn: () -> Unit) {
+fun SignUpScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
+    onLoggedIn: () -> Unit = {},
+    onSignIn: () -> Unit = {}
+) {
     val context = LocalContext.current
     val registerState = viewModel.registerState.collectAsState()
 
-    if (registerState.value.state) {
-        onLoggedIn()
+    LaunchedEffect(registerState.value.state) {
+        if (registerState.value.state) {
+            onLoggedIn()
+        }
     }
-    if (!registerState.value.error.isNullOrBlank()) {
-        Toast.makeText(
-            context,
-            registerState.value.error,
-            Toast.LENGTH_SHORT
-        ).show()
+    LaunchedEffect(registerState.value.error) {
+        if (!registerState.value.error.isNullOrBlank()) {
+            Toast.makeText(
+                context,
+                registerState.value.error,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
-    BackHandler {
-        (context as ComponentActivity).moveTaskToBack(true)
-    }
     Box {
         SignUpScreenContent(
-            onSignUpClick = { email, password ->
-                viewModel.registerUser(email, password)
-            },
+            onSignUpClick = viewModel::registerUser,
             onSignIn = {
                 onSignIn()
             }
         )
-        if (registerState.value.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.BottomCenter))
-        }
 
     }
 }
 
 @Composable
-fun SignUpScreenContent(onSignUpClick: (String, String) -> Unit, onSignIn: () -> Unit) {
+fun SignUpScreenContent(
+    onSignUpClick: (String, String) -> Unit = { _, _ -> },
+    onSignIn: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -111,7 +114,6 @@ fun SignUpScreenContent(onSignUpClick: (String, String) -> Unit, onSignIn: () ->
             modifier = Modifier
                 .weight(2.5f)
                 .fillMaxWidth(0.9f),
-            //.fillMaxSize(),
             onSignUpClick = { email, password ->
                 onSignUpClick(email, password)
             }
@@ -262,6 +264,6 @@ fun Footer(modifier: Modifier = Modifier, onSignIn: () -> Unit) {
 @Composable
 fun SignUpScreenPreviewLight() {
     BudgetPlannerAppTheme {
-        SignUpScreenContent ({_, _ ->}, {})
+        SignUpScreenContent()
     }
 }

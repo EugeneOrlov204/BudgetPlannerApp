@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,33 +61,35 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 fun PreviewSignInScreen()
 {
     BudgetPlannerAppTheme {
-        SignInScreenContent({_, _ ->},{})
+        SignInScreenContent()
     }
 }
 
 @Composable
-fun SignInScreen(viewModel: SignInViewModel = hiltViewModel(), onLoggedIn: () -> Unit, onSignUp: () -> Unit) {
+fun SignInScreen(viewModel: SignInViewModel = hiltViewModel(), onLoggedIn: () -> Unit = {}, onSignUp: () -> Unit = {}) {
     val context = LocalContext.current
     val loginState = viewModel.loginState.collectAsState()
 
     if (loginState.value.state) {
-        onLoggedIn()
+        SideEffect {
+            onLoggedIn()
+        }
     }
     if (!loginState.value.error.isNullOrBlank()) {
-        Toast.makeText(
-            context,
-            loginState.value.error,
-            Toast.LENGTH_SHORT
-        ).show()
+        SideEffect {
+            Toast.makeText(
+                context,
+                loginState.value.error,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     BackHandler {
         (context as ComponentActivity).moveTaskToBack(true)
     }
     SignInScreenContent(
-        onLoggedIn = { email, password ->
-            viewModel.loginUser(email, password)
-        },
+        onLoggedIn = viewModel::loginUser,
         onSignUp = {
             onSignUp()
         }
@@ -94,7 +97,7 @@ fun SignInScreen(viewModel: SignInViewModel = hiltViewModel(), onLoggedIn: () ->
 }
 
 @Composable
-fun SignInScreenContent(onLoggedIn: (String, String) -> Unit, onSignUp: () -> Unit) {
+fun SignInScreenContent(onLoggedIn: (String, String) -> Unit = {_, _ ->}, onSignUp: () -> Unit = {}) {
     Column(
         Modifier
             .fillMaxSize()

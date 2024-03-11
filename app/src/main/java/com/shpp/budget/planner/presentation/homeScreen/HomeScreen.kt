@@ -43,7 +43,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onLoggedOut: () -> Un
 @Composable
 fun HomeScreenContent() {
     Box(modifier = Modifier.fillMaxSize()) {
-        Text(Firebase.auth.currentUser?.email ?: "no email")
+        Text("Home")
     }
 }
 

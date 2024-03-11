@@ -20,23 +20,19 @@ fun Navigation() {
             composable(Screen.Auth.SignUp.route) {
                 SignUpScreen(
                     onLoggedIn = {
-                        navController.popBackStack(Screen.Home.route, true)
-                        navController.navigate(Screen.Home.route)
+                        navController.popBackStack(Screen.Auth.SignIn.route, true)
                     },
                     onSignIn = {
-                        navController.popBackStack(Screen.Auth.SignUp.route, true)
-                        navController.navigate(Screen.Auth.SignIn.route)
+                        navController.navigateUp()
                     }
                 )
             }
             composable(Screen.Auth.SignIn.route) {
                 SignInScreen(
                     onLoggedIn = {
-                        navController.popBackStack(Screen.Home.route, true)
-                        navController.navigate(Screen.Home.route)
+                        navController.navigateUp()
                     },
                     onSignUp = {
-                        navController.popBackStack(Screen.Auth.SignIn.route, true)
                         navController.navigate(Screen.Auth.SignUp.route)
                     }
                 )
