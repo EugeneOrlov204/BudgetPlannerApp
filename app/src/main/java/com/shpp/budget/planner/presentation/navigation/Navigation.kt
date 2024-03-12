@@ -1,6 +1,7 @@
 package com.shpp.budget.planner.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -20,10 +21,12 @@ fun Navigation() {
             composable(Screen.Auth.SignUp.route) {
                 SignUpScreen(
                     onLoggedIn = {
-                        navController.popBackStack(Screen.Auth.SignIn.route, true)
+                        navController.popBackStack(Screen.Auth.route, true)
                     },
-                    onSignIn = {
-                        navController.navigateUp()
+                    onSignInButtonClick = {
+                        navigate(navController, Screen.Auth.SignIn.route) {
+                            navController.navigateUp()
+                        }
                     }
                 )
             }
@@ -32,12 +35,22 @@ fun Navigation() {
                     onLoggedIn = {
                         navController.navigateUp()
                     },
-                    onSignUp = {
-                        navController.navigate(Screen.Auth.SignUp.route)
+                    onSignUpClick = {
+                        navigate(navController, Screen.Auth.SignUp.route) {
+                            navController.navigate(Screen.Auth.SignUp.route)
+                        }
                     }
                 )
             }
 
         }
+    }
+
+}
+
+fun navigate(navController: NavController, desiredScreen: String, action: () -> Unit) {
+    val currentDestination = navController.currentBackStackEntry?.destination?.route
+    if (currentDestination != desiredScreen) {
+        action()
     }
 }

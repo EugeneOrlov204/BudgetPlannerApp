@@ -3,11 +3,7 @@ package com.shpp.budget.planner.presentation.signUpScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shpp.budget.planner.domain.useCases.auth.RegisterUserUseCase
-import com.shpp.budget.planner.presentation.utils.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,21 +12,20 @@ class SignUpViewModel @Inject constructor(
     private val registerUserUseCase: RegisterUserUseCase
 ) : ViewModel() {
 
-    private val _registerState = MutableStateFlow(AuthState(false))
-    val registerState = _registerState.asStateFlow()
-
-    fun registerUser(email: String, password: String) {
+    fun registerUser(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         viewModelScope.launch {
-            val result = registerUserUseCase(email, password)
-            if (result.isSuccess) {
-                _registerState.update {
-                    AuthState(true, null)
+            registerUserUseCase(email, password)
+                .onSuccess {
+                    onSuccess()
                 }
-            } else {
-                _registerState.update {
-                    AuthState(false, result.exceptionOrNull()?.message)
+                .onFailure { throwable ->
+                    onFailure(throwable.localizedMessage.orEmpty())
                 }
-            }
         }
     }
 }

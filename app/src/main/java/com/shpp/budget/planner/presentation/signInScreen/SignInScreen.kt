@@ -28,8 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -58,46 +56,48 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 @PreviewLightDark
 @PreviewScreenSizes
 @Composable
-fun PreviewSignInScreen()
-{
+fun PreviewSignInScreen() {
     BudgetPlannerAppTheme {
         SignInScreenContent()
     }
 }
 
 @Composable
-fun SignInScreen(viewModel: SignInViewModel = hiltViewModel(), onLoggedIn: () -> Unit = {}, onSignUp: () -> Unit = {}) {
+fun SignInScreen(
+    viewModel: SignInViewModel = hiltViewModel(),
+    onLoggedIn: () -> Unit = {},
+    onSignUpClick: () -> Unit = {}
+) {
     val context = LocalContext.current
-    val loginState = viewModel.loginState.collectAsState()
-
-    if (loginState.value.state) {
-        SideEffect {
-            onLoggedIn()
-        }
-    }
-    if (!loginState.value.error.isNullOrBlank()) {
-        SideEffect {
-            Toast.makeText(
-                context,
-                loginState.value.error,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
+    var currentToast: Toast? = null
 
     BackHandler {
         (context as ComponentActivity).moveTaskToBack(true)
     }
     SignInScreenContent(
-        onLoggedIn = viewModel::loginUser,
-        onSignUp = {
-            onSignUp()
+        onLoggedIn = { email, password ->
+            viewModel.loginUser(
+                email = email,
+                password = password,
+                onSuccess = onLoggedIn,
+                onFailure = {
+                    currentToast?.cancel()
+                    currentToast = Toast.makeText(context, it, Toast.LENGTH_SHORT)
+                    currentToast?.show()
+                }
+            )
+        },
+        onSignUpCLick = {
+            onSignUpClick()
         }
     )
 }
 
 @Composable
-fun SignInScreenContent(onLoggedIn: (String, String) -> Unit = {_, _ ->}, onSignUp: () -> Unit = {}) {
+fun SignInScreenContent(
+    onLoggedIn: (String, String) -> Unit = { _, _ -> },
+    onSignUpCLick: () -> Unit = {}
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -108,8 +108,7 @@ fun SignInScreenContent(onLoggedIn: (String, String) -> Unit = {_, _ ->}, onSign
                         MaterialTheme.colorScheme.background
                     )
                 )
-            )
-         ,
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -136,7 +135,7 @@ fun SignInScreenContent(onLoggedIn: (String, String) -> Unit = {_, _ ->}, onSign
             Modifier
                 .fillMaxSize()
                 .weight(1f),
-            onSignUp
+            onSignUpCLick
         )
     }
 }
@@ -200,10 +199,10 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                 }
             }
         )
-         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+        Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         Button(
             onClick = {
-                   onLoggedIn(email, password)
+                onLoggedIn(email, password)
             },
             shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
             modifier = Modifier
@@ -260,7 +259,7 @@ fun SignInWithGoogle(modifier: Modifier) {
 }
 
 @Composable
-fun SignUp(modifier: Modifier, onSignUp: () -> Unit) {
+fun SignUp(modifier: Modifier, onSignUpClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -275,7 +274,7 @@ fun SignUp(modifier: Modifier, onSignUp: () -> Unit) {
             text = buildAnnotatedString {
                 append(stringResource(R.string.sign_up_button_text))
             },
-            onClick = { onSignUp() },
+            onClick = { onSignUpClick() },
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,

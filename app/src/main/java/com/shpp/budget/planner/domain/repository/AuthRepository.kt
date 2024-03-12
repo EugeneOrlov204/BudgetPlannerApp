@@ -1,9 +1,9 @@
 package com.shpp.budget.planner.domain.repository
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface AuthRepository {
-    fun getIsUserLoggedIn(): Flow<Boolean>
+    val isLoggedIn: StateFlow<Boolean?>
     suspend fun registerUser(email: String, password: String): Result<Unit>
     suspend fun loginUser(email: String, password: String): Result<Unit>
 }
