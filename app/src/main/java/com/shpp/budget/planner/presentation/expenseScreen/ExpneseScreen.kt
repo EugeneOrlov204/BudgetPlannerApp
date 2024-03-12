@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -43,7 +42,7 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 @PreviewLightDark
 @PreviewScreenSizes
 @Composable
-fun preview() {
+fun Preview() {
     BudgetPlannerAppTheme {
         ExpenseScreen()
     }
@@ -58,19 +57,18 @@ fun ExpenseScreen() {
         verticalArrangement = Arrangement.SpaceBetween
     )
     {
-        Header(
-            Modifier
-                .fillMaxWidth()
-        )
-        BalanceBoard(
-            Modifier
-                .fillMaxWidth()
-        )
+        Header(Modifier.fillMaxWidth())
+        BalanceBoard(Modifier.fillMaxWidth())
         TransactionsColumn(
-            Modifier
-                .fillMaxWidth(),
+            Modifier.fillMaxWidth(),
             //Todo get list from viewModel
-            List(4) { Transaction("car", "11 March 2024", 500f) },
+            List(4) {
+                Transaction(
+                    typeName = "car",
+                    date = "11 March 2024",
+                    transactionAmount = 500f
+                )
+            },
             stringResource(R.string.expense_screen_cash_transactions_title)
         )
         Divider(
@@ -82,11 +80,16 @@ fun ExpenseScreen() {
         )
         TransactionsColumn(
             Modifier.fillMaxWidth(),
-            List(4) { Transaction("car", "11 March 2024", 500f) },
+            List(4) {
+                Transaction(
+                    typeName = "car",
+                    date = "11 March 2024",
+                    transactionAmount = 500f
+                )
+            },
             stringResource(R.string.expense_screen_ing_transactions_title)
         )
     }
-
 }
 
 @Composable
@@ -104,7 +107,6 @@ fun Header(modifier: Modifier) {
                 start = dimensionResource(R.dimen.expense_screen_header_text_start_padding),
                 bottom = dimensionResource(R.dimen.expense_screen_header_text_bottom_padding),
                 top = dimensionResource(R.dimen.expense_screen_header_text_top_padding)
-
             )
         )
     }
@@ -116,98 +118,158 @@ fun BalanceBoard(modifier: Modifier) {
     val ingValue by rememberSaveable { mutableStateOf(0f) }
     val brdValue by rememberSaveable { mutableStateOf(0f) }
     val cashValue by rememberSaveable { mutableStateOf(0f) }
-    Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_space_between_header_and_balance_board)))
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(
-                    horizontal = dimensionResource(R.dimen.expense_screen_horizontal_padding)
-                )
-                .shadow(
-                    dimensionResource(R.dimen.expense_screen_shadow_size),
-                    shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius))
-                )
-                .background(
-                    shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius)),
-                    color = MaterialTheme.colorScheme.background
-                ),
+    Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_space_between_header_and_balance_board)))
 
-            ) {
-            Column(
-                modifier = Modifier.padding(
-                    horizontal = dimensionResource(R.dimen.expense_screen_balance_board_horizontal_padding),
-                    vertical = dimensionResource(R.dimen.expense_screen_transaction_icon_vertical_padding)
-                )
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(R.string.expense_screen_total_balance),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Text(
-                        text = totalBalanceValue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(R.string.expense_screen_ING_account),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Text(
-                        text = ingValue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(R.string.expense_screen_brd_account),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Text(
-                        text = brdValue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(R.string.expense_screen_cash_transactions_title),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Text(
-                        text = cashValue.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
+    Row(
+        modifier = modifier
+            .padding(
+                horizontal = dimensionResource(R.dimen.expense_screen_horizontal_padding),
+            )
+            .shadow(
+                dimensionResource(R.dimen.expense_screen_shadow_size),
+                shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius))
+            )
+            .background(
+                shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius)),
+                color = MaterialTheme.colorScheme.background
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            modifier = Modifier.padding(
+                start = dimensionResource(R.dimen.expense_screen_balance_board_horizontal_padding),
+                top = dimensionResource(R.dimen.expense_screen_balance_board_vertical_padding),
+                bottom = dimensionResource(R.dimen.expense_screen_balance_board_vertical_padding)
+            ),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.expense_screen_between_balance_text_space))
+        ) {
+            Text(
+                text = stringResource(R.string.expense_screen_total_balance),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Text(
+                text = stringResource(R.string.expense_screen_ING_account),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Text(
+                text = stringResource(R.string.expense_screen_brd_account),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Text(
+                text = stringResource(R.string.expense_screen_cash_transactions_title),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
+        Column(
+            modifier = Modifier.padding(
+                end = dimensionResource(R.dimen.expense_screen_balance_board_horizontal_padding),
+                top = dimensionResource(R.dimen.expense_screen_balance_board_vertical_padding),
+                bottom = dimensionResource(R.dimen.expense_screen_balance_board_vertical_padding)
+            ),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.expense_screen_between_balance_text_space))
+        ) {
+            Text(
+                text = totalBalanceValue.toString(),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Text(
+                text = ingValue.toString(),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Text(
+                text = brdValue.toString(),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Text(
+                text = cashValue.toString(),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+
     }
+//        Column(
+//            modifier = Modifier.padding(
+//                horizontal = dimensionResource(R.dimen.expense_screen_horizontal_padding),
+//            ).shadow(
+//                dimensionResource(R.dimen.expense_screen_shadow_size),
+//                shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius))
+//            ).background(
+//                shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius)),
+//                color = MaterialTheme.colorScheme.background
+//            )
+//        ) {
+//            Row(
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.expense_screen_total_balance),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//                Text(
+//                    text = totalBalanceValue.toString(),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//            }
+//            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
+//            Row(
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.expense_screen_ING_account),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//                Text(
+//                    text = ingValue.toString(),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//            }
+//            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
+//            Row(
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.expense_screen_brd_account),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//                Text(
+//                    text = brdValue.toString(),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//            }
+//            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
+//            Row(
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.expense_screen_cash_transactions_title),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//                Text(
+//                    text = cashValue.toString(),
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    color = MaterialTheme.colorScheme.onPrimary
+//                )
+//            }
+//    }
 }
 
 @Composable
@@ -228,13 +290,8 @@ fun TransactionsColumn(
             text = titleText,
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
         )
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.expense_screen_between_transaction_item_space))
-        ) {
-            for (t in transactionItems) {
-                TransactionItem(t.typeName, t.date, t.transactionAmount)
-            }
+        for (t in transactionItems) {
+            TransactionItem(t.typeName, t.date, t.transactionAmount)
         }
         Button(
             onClick = onClick, colors = ButtonDefaults.buttonColors(
