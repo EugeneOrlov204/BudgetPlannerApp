@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -193,83 +192,7 @@ fun BalanceBoard(modifier: Modifier) {
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
-
     }
-//        Column(
-//            modifier = Modifier.padding(
-//                horizontal = dimensionResource(R.dimen.expense_screen_horizontal_padding),
-//            ).shadow(
-//                dimensionResource(R.dimen.expense_screen_shadow_size),
-//                shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius))
-//            ).background(
-//                shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius)),
-//                color = MaterialTheme.colorScheme.background
-//            )
-//        ) {
-//            Row(
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.expense_screen_total_balance),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//                Text(
-//                    text = totalBalanceValue.toString(),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//            }
-//            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
-//            Row(
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.expense_screen_ING_account),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//                Text(
-//                    text = ingValue.toString(),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//            }
-//            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
-//            Row(
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.expense_screen_brd_account),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//                Text(
-//                    text = brdValue.toString(),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//            }
-//            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_between_balance_text_space)))
-//            Row(
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.expense_screen_cash_transactions_title),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//                Text(
-//                    text = cashValue.toString(),
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//            }
-//    }
 }
 
 @Composable
@@ -306,11 +229,10 @@ fun TransactionsColumn(
     }
 }
 
-
 @Composable
 fun TransactionItem(transactionType: String, transactionDate: String, transactionAmount: Float) {
-    Box(
-        contentAlignment = Alignment.Center,
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(R.dimen.expense_screen_horizontal_padding))
@@ -321,35 +243,31 @@ fun TransactionItem(transactionType: String, transactionDate: String, transactio
             .background(
                 shape = RoundedCornerShape(dimensionResource(R.dimen.expense_screen_box_corner_radius)),
                 color = MaterialTheme.colorScheme.background
-            ),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth(0.85f)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.car_ic),
-                contentDescription = null,
-                modifier = Modifier.padding(vertical = dimensionResource(R.dimen.expense_screen_transaction_icon_vertical_padding))
             )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.expense_screen_space_between_transaction_image_and_text)))
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = transactionDate,
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                    text = transactionType,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+    ) {
+        Spacer(modifier = Modifier.weight(0.1f))
+        Image(
+            painter = painterResource(R.drawable.car_ic),
+            contentDescription = null,
+            modifier = Modifier.padding(vertical = dimensionResource(R.dimen.expense_screen_transaction_icon_vertical_padding))
+        )
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.expense_screen_space_between_transaction_image_and_text)))
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
-                text = transactionAmount.toString(),
-                style = MaterialTheme.typography.bodyMedium
+                text = transactionDate,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = transactionType,
+                style = MaterialTheme.typography.bodyLarge
             )
         }
+        Text(
+            text = transactionAmount.toString(),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(modifier = Modifier.weight(0.1f))
     }
 }

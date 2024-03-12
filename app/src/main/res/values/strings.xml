@@ -23,12 +23,12 @@
     <string name="sign_up_button_text">Sign Up</string>
 
     <!-- Expense screen -->
-    <string name="expense_screen_header_text">Budget</string>
-    <string name="expense_screen_total_balance">Total balance</string>
     <string name="expense_screen_ING_account">ING account</string>
     <string name="expense_screen_brd_account">BRD account</string>
     <string name="expense_screen_cash_transactions_title">Cash</string>
+    <string name="expense_screen_header_text">Budget</string>
     <string name="expense_screen_ing_transactions_title">ING</string>
     <string name="expense_screen_to_transaction_screen_button_text">See all</string>
+    <string name="expense_screen_total_balance">Total balance</string>
 
 </resources>
