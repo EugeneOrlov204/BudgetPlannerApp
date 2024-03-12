@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -40,15 +41,18 @@ import com.shpp.budget.planner.presentation.utils.ext.toPath
  * Draw height is extended on top by
  *
  * [barPaddingVertical]+([plusIconSize] + [plusPadding] * 2)*[plusButtonSpacingPercent]
+ *
+ * If you are not planing on changing default values, add [R.dimen.bottom_app_bar_padding_top]
+ * bottom padding on last element in vertically scrollable composable.
  */
 @Composable
 fun BottomAppBar(
     currentScreen: BottomBarScreen,
     plusButtonColor: Color = MaterialTheme.colorScheme.secondary,
     plusIconColor: Color = MaterialTheme.colorScheme.onSecondary,
-    plusPadding: Dp = dimensionResource(R.dimen.home_screen_central_button_padding),
-    plusIconSize: Dp = dimensionResource(R.dimen.home_screen_central_button_icon_size),
-    barPaddingVertical: Dp = dimensionResource(R.dimen.home_screen_bottom_bar_padding_vertical),
+    plusPadding: Dp = dimensionResource(R.dimen.bottom_app_bar_central_button_padding),
+    plusIconSize: Dp = dimensionResource(R.dimen.bottom_app_bar_central_button_icon_size),
+    barPaddingVertical: Dp = dimensionResource(R.dimen.bottom_app_bar_padding_vertical),
     barColor: Color = MaterialTheme.colorScheme.tertiary,
     @FloatRange(from = 0.0, to = 1.0) plusButtonSpacingPercent: Float = 0.2f,
     onPlusClick: () -> Unit = {},
@@ -65,6 +69,7 @@ fun BottomAppBar(
         Icon(
             modifier = Modifier
                 .offset(y = -(plusSize * (1 + plusButtonSpacingPercent)))
+                .clip(CircleShape)
                 .clickable { onPlusClick() }
                 .background(color = plusButtonColor, shape = CircleShape)
                 .padding(plusPadding)
