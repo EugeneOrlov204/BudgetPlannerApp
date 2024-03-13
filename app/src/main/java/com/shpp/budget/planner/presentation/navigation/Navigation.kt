@@ -24,8 +24,8 @@ fun Navigation() {
                         navController.popBackStack(Screen.Auth.route, true)
                     },
                     onSignInButtonClick = {
-                        navigate(navController, Screen.Auth.SignIn.route) {
-                            navController.navigateUp()
+                        navController.performIfCurrentDestinationDoesntMatch(Screen.Auth.SignIn.route) {
+                            navigateUp()
                         }
                     }
                 )
@@ -36,8 +36,8 @@ fun Navigation() {
                         navController.navigateUp()
                     },
                     onSignUpClick = {
-                        navigate(navController, Screen.Auth.SignUp.route) {
-                            navController.navigate(Screen.Auth.SignUp.route)
+                        navController.performIfCurrentDestinationDoesntMatch(Screen.Auth.SignUp.route) {
+                            navigate(Screen.Auth.SignUp.route)
                         }
                     }
                 )
@@ -48,9 +48,11 @@ fun Navigation() {
 
 }
 
-fun navigate(navController: NavController, desiredScreen: String, action: () -> Unit) {
-    val currentDestination = navController.currentBackStackEntry?.destination?.route
-    if (currentDestination != desiredScreen) {
+fun NavController.performIfCurrentDestinationDoesntMatch(
+    secondDestination: String,
+    action: NavController.() -> Unit
+) {
+    if (currentDestination?.route != secondDestination) {
         action()
     }
 }

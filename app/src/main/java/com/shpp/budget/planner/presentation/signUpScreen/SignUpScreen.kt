@@ -25,8 +25,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,7 +57,13 @@ fun SignUpScreen(
     onSignInButtonClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var currentToast: Toast? = null
+    var currentToast: Toast? by remember { mutableStateOf(null) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            currentToast?.cancel()
+        }
+    }
 
     SignUpScreenContent(
         onSignUpButtonClick = { email, password ->
