@@ -4,7 +4,7 @@ object Dependencies {
     const val coreKtx = "1.12.0"
     const val lifecycleRuntimeKtx = "2.7.0"
     const val activityCompose = "1.8.2"
-    const val composeBom = "2023.08.00"
+    const val composeBom = "2024.02.02"
     const val junit = "4.13.2"
     const val androidJUnit = "1.1.5"
     const val espressoCore = "3.5.1"

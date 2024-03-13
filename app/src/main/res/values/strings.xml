@@ -6,4 +6,16 @@
     <string name="sign_up_screen_email_text_field">Email</string>
     <string name="sign_up_screen_header">Sign Up</string>
     <string name="sign_up_screen_password_text_field">Password</string>
+
+    <!--Home screen-->
+    <string name="available_balance">Available balance</string>
+    <string name="budget_for">Budget for %1$s</string>
+    <string name="cash">Cash</string>
+    <string name="cash_available">Cash Available</string>
+    <string name="create_a_saving_goal">Create a Saving goal</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="expenses">Expenses</string>
+    <string name="income">Income</string>
+    <string name="placeholder_text">Lorem ipsum dolor sit amet, consectetur adipisci.</string>
+    <string name="see_details">See details</string>
 </resources>
