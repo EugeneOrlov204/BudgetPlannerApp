@@ -16,6 +16,9 @@ class AuthValidator {
     private val passwordPattern =
         "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#\$@!%&*?])[A-Za-z\\d#\$@!%&*?]{8,16}\$"
 
+    private val maximumUsernameLength = 30
+    private val maximumPasswordLength=16
+    private val minimumPasswordLength=8
     /**
      * method that checks if the username is not empty
      * @param username text that will be considered as a username
@@ -25,6 +28,8 @@ class AuthValidator {
     fun validateUsername(username: String): ValidationResult {
         return if (username.isBlank())
             ValidationResult(false, R.string.empty_field_validation_error)
+        else if (username.length > maximumUsernameLength)
+            ValidationResult(false, R.string.username_validation_maximum_length_error_message)
         else ValidationResult(true, R.string.validation_success)
     }
 
@@ -52,6 +57,8 @@ class AuthValidator {
     fun validatePassword(password: String): ValidationResult {
         return if (password.isBlank())
             ValidationResult(false, R.string.empty_field_validation_error)
+        else if(password.length<minimumPasswordLength || password.length>maximumPasswordLength)
+            ValidationResult(false,R.string.password_validation_length_error)
         else if (!password.matches(Regex(passwordPattern)))
             ValidationResult(false, R.string.password_validation_error)
         else ValidationResult(true, R.string.validation_success)
