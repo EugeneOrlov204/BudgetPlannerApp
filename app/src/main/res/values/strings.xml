@@ -1,7 +1,5 @@
 <resources>
-
     <string name="app_name">BudgetPlannerApp</string>
-    <!-- Sign Up screen -->
     <string name="sign_up_screen_already_a_member">Already a member?</string>
     <string name="sign_up_screen_bottom_sign_in_button">Sign in</string>
     <string name="sign_up_screen_create_account_button">Create Account</string>
