@@ -11,7 +11,6 @@
     <dimen name="sign_up_screen_button_corner_radius">8dp</dimen>
     <dimen name="sign_up_screen_default_padding">8dp</dimen>
     <dimen name="sign_up_screen_main_column_padding">55dp</dimen>
-    <!-- Texts -->
     <dimen name="sign_up_screen_footer_button_text_size">24sp</dimen>
 
     <!-- Sign in screen -->
@@ -22,8 +21,25 @@
     <dimen name="sign_in_button_height">48dp</dimen>
     <dimen name="small_spacer">16dp</dimen>
     <dimen name="small_padding">16dp</dimen>
-    <!-- Texts -->
     <dimen name="sign_in_screen_button_sign_up_size">24sp</dimen>
 
+    <!-- Expense screen -->
+    <!-- Views -->
+    <dimen name="expense_screen_header_text_start_padding">40dp</dimen>
+    <dimen name="expense_screen_header_text_top_padding">40dp</dimen>
+    <dimen name="expense_screen_header_text_bottom_padding">18dp</dimen>
+    <dimen name="expense_screen_horizontal_padding">16dp</dimen>
+    <dimen name="expense_screen_shadow_size">2dp</dimen>
+    <dimen name="expense_screen_box_corner_radius">4dp</dimen>
+    <dimen name="expense_screen_space_between_header_and_balance_board">30dp</dimen>
+    <dimen name="expense_screen_balance_board_vertical_padding">30dp</dimen>
+    <dimen name="expense_screen_balance_board_horizontal_padding">36dp</dimen>
+    <dimen name="expense_screen_between_balance_text_space">4dp</dimen>
+    <dimen name="expense_screen_between_transaction_item_space">16dp</dimen>
+    <dimen name="expense_screen_transaction_icon_vertical_padding">8dp</dimen>
+    <dimen name="expense_screen_space_between_transaction_image_and_text">10dp</dimen>
+    <dimen name="expense_screen_cash_transactions_column_vertical_padding">20dp</dimen>
+    <dimen name="expense_screen_divider_thickness">1dp</dimen>
+    <dimen name="expense_screen_header_text_size">18sp</dimen>
 
 </resources>
