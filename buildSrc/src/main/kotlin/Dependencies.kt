@@ -1,5 +1,5 @@
 object Dependencies {
-    const val kotlin = "1.9.0"
+    const val kotlin = "1.9.22"
     const val androidGradlePlugin = "8.2.2"
     const val coreKtx = "1.12.0"
     const val lifecycleRuntimeKtx = "2.7.0"
@@ -8,7 +8,7 @@ object Dependencies {
     const val junit = "4.13.2"
     const val androidJUnit = "1.1.5"
     const val espressoCore = "3.5.1"
-    const val kotlinCompilerExtensionVersion = "1.5.1"
+    const val kotlinCompilerExtensionVersion = "1.5.10"
     const val compileSdk = 34
     const val minSdk = 24
     const val targetSdk = 34
