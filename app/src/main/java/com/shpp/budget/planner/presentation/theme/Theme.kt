@@ -22,6 +22,7 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = tertiary,
     onTertiary = onTertiary,
     surface = surface,
+    inverseOnSurface = clickableTextColor
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -31,6 +32,7 @@ private val LightColorScheme = lightColorScheme(
     tertiary = tertiary,
     onTertiary = onTertiary,
     surface = surface,
+    inverseOnSurface = clickableTextColor
 )
 
 @Composable
