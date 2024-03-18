@@ -70,7 +70,7 @@ fun ExpenseScreen() {
             },
             stringResource(R.string.expense_screen_cash_transactions_title)
         )
-        Divider(
+        Divider(    //TODO read warnings
             color = MaterialTheme.colorScheme.onPrimary,
             thickness = dimensionResource(R.dimen.expense_screen_divider_thickness),
             modifier = Modifier.padding(
@@ -223,7 +223,7 @@ fun TransactionsColumn(
         ) {
             Text(
                 text = stringResource(R.string.expense_screen_to_transaction_screen_button_text),
-                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.tertiary)
+                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.inverseOnSurface)
             )
         }
     }

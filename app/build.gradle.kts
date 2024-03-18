@@ -98,6 +98,9 @@ dependencies {
 
     // Material Icons extended
     implementation("androidx.compose.material:material-icons-extended:${Dependencies.materialIconsExtended}")
+
+    //Polygons
+    implementation("androidx.graphics:graphics-shapes:${Dependencies.shapesVersion}")
 }
 
 kapt {

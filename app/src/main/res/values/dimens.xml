@@ -42,4 +42,27 @@
     <dimen name="expense_screen_divider_thickness">1dp</dimen>
     <dimen name="expense_screen_header_text_size">18sp</dimen>
 
+    <!-- Bottom app bar -->
+    <dimen name="bottom_app_bar_central_button_icon_size">24dp</dimen>
+    <dimen name="bottom_app_bar_central_button_padding">12dp</dimen>
+    <dimen name="bottom_app_bar_padding_top">40dp</dimen>
+    <dimen name="bottom_app_bar_padding_vertical">30dp</dimen>
+
+    <!-- Home screen -->
+    <dimen name="home_screen_available_balance_padding_vertical">20dp</dimen>
+    <dimen name="home_screen_balance_text_padding_bottom">32dp</dimen>
+    <dimen name="home_screen_balance_text_padding_top">11dp</dimen>
+    <dimen name="home_screen_cash_element_text_padding_bottom">6dp</dimen>
+    <dimen name="home_screen_cash_element_text_padding_top">47dp</dimen>
+    <dimen name="home_screen_cash_elements_spacing">9dp</dimen>
+    <dimen name="home_screen_cash_padding_bottom">30dp</dimen>
+    <dimen name="home_screen_cash_text_padding_vertical">16dp</dimen>
+    <dimen name="home_screen_content_padding_horizontal">24dp</dimen>
+    <dimen name="home_screen_elements_content_padding">20dp</dimen>
+    <dimen name="home_screen_elements_corner_radius">24dp</dimen>
+    <dimen name="home_screen_elements_shadow_elevation">3dp</dimen>
+    <dimen name="home_screen_icon_placeholder_size">42dp</dimen>
+    <dimen name="home_screen_saving_goals_element_padding_vertical">20dp</dimen>
+    <dimen name="home_screen_small_text_padding">2dp</dimen>
+    <dimen name="top_app_bar_padding_vertical">32dp</dimen>
 </resources>

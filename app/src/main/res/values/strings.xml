@@ -29,4 +29,15 @@
     <string name="expense_screen_to_transaction_screen_button_text">See all</string>
     <string name="expense_screen_total_balance">Total balance</string>
 
+    <!--Home screen-->
+    <string name="available_balance">Available balance</string>
+    <string name="budget_for">Budget for %1$s</string>
+    <string name="cash">Cash</string>
+    <string name="cash_available">Cash Available</string>
+    <string name="create_a_saving_goal">Create a Saving goal</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="expenses">Expenses</string>
+    <string name="income">Income</string>
+    <string name="placeholder_text">Lorem ipsum dolor sit amet, consectetur adipisci.</string>
+    <string name="see_details">See details</string>
 </resources>
