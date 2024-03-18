@@ -40,4 +40,11 @@
     <string name="income">Income</string>
     <string name="placeholder_text">Lorem ipsum dolor sit amet, consectetur adipisci.</string>
     <string name="see_details">See details</string>
+
+    <!--Add screen-->
+    <string name="add_transaction">Add transaction</string>
+    <string name="confirm">Confirm</string>
+    <string name="from_category">From category</string>
+    <string name="new_expense">New expense</string>
+    <string name="new_income"> New income</string>
 </resources>
