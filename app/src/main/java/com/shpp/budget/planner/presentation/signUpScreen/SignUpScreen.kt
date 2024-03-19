@@ -1,9 +1,7 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -26,8 +25,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,27 +37,61 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.domain.validation.AuthValidator
+import com.shpp.budget.planner.domain.validation.EmailValidationResult
+import com.shpp.budget.planner.domain.validation.PasswordValidationResult
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
-fun SignUpScreen(onLoggedIn: () -> Unit) {
+fun SignUpScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
+    onLoggedIn: () -> Unit = {},
+    onSignInButtonClick: () -> Unit = {}
+) {
     val context = LocalContext.current
-    BackHandler {
-        (context as ComponentActivity).moveTaskToBack(true)
+    var currentToast: Toast? by remember { mutableStateOf(null) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            currentToast?.cancel()
+        }
     }
-    SignUpScreenContent()
+
+    SignUpScreenContent(
+        onSignUpButtonClick = { email, password ->
+            viewModel.registerUser(
+                email = email,
+                password = password,
+                onSuccess = onLoggedIn,
+                onFailure = {
+                    currentToast?.cancel()
+                    currentToast = Toast.makeText(context, it, Toast.LENGTH_SHORT)
+                    currentToast?.show()
+                }
+            )
+        },
+        onSignIn = {
+            onSignInButtonClick()
+        }
+    )
 }
 
 @Composable
-fun SignUpScreenContent() {
+fun SignUpScreenContent(
+    onSignUpButtonClick: (String, String) -> Unit = { _, _ -> },
+    onSignIn: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +103,8 @@ fun SignUpScreenContent() {
                     )
                 )
             )
-            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding))
+            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding)),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
             modifier = Modifier
@@ -78,13 +114,18 @@ fun SignUpScreenContent() {
         TextFieldsWithButton(
             modifier = Modifier
                 .weight(2.5f)
-                .fillMaxSize()
+                .fillMaxWidth(0.9f),
+            onSignUpButtonClick = { email, password ->
+                onSignUpButtonClick(email, password)
+            }
         )
         Footer(
             modifier = Modifier
                 .weight(1.5f)
                 .fillMaxSize()
-        )
+        ) {
+            onSignIn()
+        }
     }
 }
 
@@ -103,11 +144,16 @@ fun Header(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TextFieldsWithButton(modifier: Modifier = Modifier) {
+fun TextFieldsWithButton(
+    modifier: Modifier = Modifier,
+    onSignUpButtonClick: (String, String) -> Unit
+) {
     var emailText by rememberSaveable { mutableStateOf("") }
     var passwordText by rememberSaveable { mutableStateOf("") }
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
-
+    var emailValidationState by rememberSaveable { mutableStateOf(EmailValidationResult.VALID) }
+    var passwordValidationState by rememberSaveable { mutableStateOf(PasswordValidationResult.VALID) }
+    val validator = AuthValidator()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -128,10 +174,18 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier) {
                 cursorColor = MaterialTheme.colorScheme.onPrimary
             ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+
+            )
+        Text(
+            text = getEmailValidationMessage(emailValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_up_validation_message_top_padding)
+                )
         )
-
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_fields)))
-
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -157,6 +211,7 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier) {
             trailingIcon = {
                 IconButton(
                     onClick = {
+
                         isPasswordVisible = !isPasswordVisible
                     }) {
                     Icon(
@@ -164,9 +219,18 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier) {
                         contentDescription = null
                     )
                 }
-            }
+            },
         )
-
+        Text(
+            text = getPasswordValidationMessage(passwordValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_up_validation_message_top_padding)
+                )
+        )
         Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_field_and_button)))
 
         ElevatedButton(
@@ -178,7 +242,16 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier) {
                 containerColor = MaterialTheme.colorScheme.secondary
             ),
             elevation = ButtonDefaults.buttonElevation(dimensionResource(id = R.dimen.sign_up_screen_button_elevation)),
-            onClick = { /*TODO*/ }
+            onClick = {
+                emailValidationState = validator.validateEmail(emailText)
+                passwordValidationState = validator.validatePassword(passwordText)
+
+                if (emailValidationState == EmailValidationResult.VALID &&
+                    passwordValidationState == PasswordValidationResult.VALID
+                ) {
+                    onSignUpButtonClick(emailText, passwordText)
+                }
+            }
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up_screen_create_account_button),
@@ -191,7 +264,26 @@ fun TextFieldsWithButton(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Footer(modifier: Modifier = Modifier) {
+fun getPasswordValidationMessage(validationState: PasswordValidationResult): String {
+    return when (validationState) {
+        PasswordValidationResult.BLANK -> stringResource(R.string.empty_field_validation_error)
+        PasswordValidationResult.LENGTH_ERROR -> stringResource(R.string.password_validation_length_error)
+        PasswordValidationResult.INVALID -> stringResource(R.string.password_validation_error)
+        else -> ""
+    }
+}
+
+@Composable
+fun getEmailValidationMessage(validationState: EmailValidationResult): String {
+    return when (validationState) {
+        EmailValidationResult.BLANK -> stringResource(R.string.empty_field_validation_error)
+        EmailValidationResult.INVALID -> stringResource(R.string.email_validation_incorrect_email)
+        else -> ""
+    }
+}
+
+@Composable
+fun Footer(modifier: Modifier = Modifier, onSignIn: () -> Unit) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -202,16 +294,14 @@ fun Footer(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_default_padding)))
-        Text(
-            modifier = Modifier
-                .clickable {
-                    // TODO:  
-                },
-            text = stringResource(id = R.string.sign_up_screen_bottom_sign_in_button),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = dimensionResource(id = R.dimen.sign_up_screen_footer_button_text_size).value.sp
+        ClickableText(
+            onClick = { onSignIn() },
+            text = AnnotatedString(stringResource(id = R.string.sign_up_screen_bottom_sign_in_button)),
+            style = TextStyle(
+                fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = dimensionResource(id = R.dimen.sign_up_screen_footer_button_text_size).value.sp
+            )
         )
     }
 }

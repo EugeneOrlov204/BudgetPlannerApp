@@ -93,9 +93,14 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebaseBom}"))
     // Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
+    // Firebase Auth
+    implementation("com.google.firebase:firebase-auth:${Dependencies.firebaseAuth}")
 
     // Material Icons extended
     implementation("androidx.compose.material:material-icons-extended:${Dependencies.materialIconsExtended}")
+
+    //Polygons
+    implementation("androidx.graphics:graphics-shapes:${Dependencies.shapesVersion}")
 }
 
 kapt {

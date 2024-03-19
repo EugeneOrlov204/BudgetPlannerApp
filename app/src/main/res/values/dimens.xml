@@ -11,8 +11,8 @@
     <dimen name="sign_up_screen_button_corner_radius">8dp</dimen>
     <dimen name="sign_up_screen_default_padding">8dp</dimen>
     <dimen name="sign_up_screen_main_column_padding">55dp</dimen>
-    <!-- Texts -->
     <dimen name="sign_up_screen_footer_button_text_size">24sp</dimen>
+    <dimen name="sign_up_validation_message_top_padding">5dp</dimen>
 
     <!-- Sign in screen -->
     <!-- Views -->
@@ -22,8 +22,50 @@
     <dimen name="sign_in_button_height">48dp</dimen>
     <dimen name="small_spacer">16dp</dimen>
     <dimen name="small_padding">16dp</dimen>
-    <!-- Texts -->
     <dimen name="sign_in_screen_button_sign_up_size">24sp</dimen>
+    <dimen name="sign_in_validation_message_top_padding">5dp</dimen>
 
 
+    <!-- Expense screen -->
+    <!-- Views -->
+    <dimen name="expense_screen_header_text_start_padding">40dp</dimen>
+    <dimen name="expense_screen_header_text_top_padding">40dp</dimen>
+    <dimen name="expense_screen_header_text_bottom_padding">18dp</dimen>
+    <dimen name="expense_screen_horizontal_padding">16dp</dimen>
+    <dimen name="expense_screen_shadow_size">2dp</dimen>
+    <dimen name="expense_screen_box_corner_radius">4dp</dimen>
+    <dimen name="expense_screen_space_between_header_and_balance_board">30dp</dimen>
+    <dimen name="expense_screen_balance_board_vertical_padding">30dp</dimen>
+    <dimen name="expense_screen_balance_board_horizontal_padding">36dp</dimen>
+    <dimen name="expense_screen_between_balance_text_space">4dp</dimen>
+    <dimen name="expense_screen_between_transaction_item_space">16dp</dimen>
+    <dimen name="expense_screen_transaction_icon_vertical_padding">8dp</dimen>
+    <dimen name="expense_screen_space_between_transaction_image_and_text">10dp</dimen>
+    <dimen name="expense_screen_cash_transactions_column_vertical_padding">20dp</dimen>
+    <dimen name="expense_screen_divider_thickness">1dp</dimen>
+    <dimen name="expense_screen_header_text_size">18sp</dimen>
+
+    <!-- Bottom app bar -->
+    <dimen name="bottom_app_bar_central_button_icon_size">24dp</dimen>
+    <dimen name="bottom_app_bar_central_button_padding">12dp</dimen>
+    <dimen name="bottom_app_bar_padding_top">40dp</dimen>
+    <dimen name="bottom_app_bar_padding_vertical">30dp</dimen>
+
+    <!-- Home screen -->
+    <dimen name="home_screen_available_balance_padding_vertical">20dp</dimen>
+    <dimen name="home_screen_balance_text_padding_bottom">32dp</dimen>
+    <dimen name="home_screen_balance_text_padding_top">11dp</dimen>
+    <dimen name="home_screen_cash_element_text_padding_bottom">6dp</dimen>
+    <dimen name="home_screen_cash_element_text_padding_top">47dp</dimen>
+    <dimen name="home_screen_cash_elements_spacing">9dp</dimen>
+    <dimen name="home_screen_cash_padding_bottom">30dp</dimen>
+    <dimen name="home_screen_cash_text_padding_vertical">16dp</dimen>
+    <dimen name="home_screen_content_padding_horizontal">24dp</dimen>
+    <dimen name="home_screen_elements_content_padding">20dp</dimen>
+    <dimen name="home_screen_elements_corner_radius">24dp</dimen>
+    <dimen name="home_screen_elements_shadow_elevation">3dp</dimen>
+    <dimen name="home_screen_icon_placeholder_size">42dp</dimen>
+    <dimen name="home_screen_saving_goals_element_padding_vertical">20dp</dimen>
+    <dimen name="home_screen_small_text_padding">2dp</dimen>
+    <dimen name="top_app_bar_padding_vertical">32dp</dimen>
 </resources>

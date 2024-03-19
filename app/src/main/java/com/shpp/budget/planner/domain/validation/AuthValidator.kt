@@ -1,67 +1,53 @@
 package com.shpp.budget.planner.domain.validation
 
-import androidx.core.util.PatternsCompat
-import com.shpp.budget.planner.R
+
+/**
+ * this is a password validation pattern
+ * that checks if the password contains at least one number,
+ * one lowercase and one uppercase letter, and one special character,
+ * and the password contains 8 to 16 characters
+ */
+const val PASSWORD_PATTERN =
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#\$@!%&*?])[A-Za-z\\d#\$@!%&*?]{8,16}\$"
+
+const val EMAIL_PATTERN = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
+
+const val MAXIMUM_PASSWORD_LENGTH = 16
+
+const val MINIMUM_PASSWORD_LENGTH = 8
 
 /**
  *class for validation of fields during authorization
  */
 class AuthValidator {
     /**
-     * this is a password validation pattern
-     * that checks if the password contains at least one number,
-     * one lowercase and one uppercase letter, and one special character,
-     * and the password contains 8 to 16 characters
-     */
-    private val passwordPattern =
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#\$@!%&*?])[A-Za-z\\d#\$@!%&*?]{8,16}\$"
-
-    private val maximumUsernameLength = 30
-    private val maximumPasswordLength=16
-    private val minimumPasswordLength=8
-    /**
-     * method that checks if the username is not empty
-     * @param username text that will be considered as a username
-     * @return a class with a boolean field with the validation result
-     * and a string resource id with the validation result message
-     */
-    fun validateUsername(username: String): ValidationResult {
-        return if (username.isBlank())
-            ValidationResult(false, R.string.empty_field_validation_error)
-        else if (username.length > maximumUsernameLength)
-            ValidationResult(false, R.string.username_validation_maximum_length_error_message)
-        else ValidationResult(true, R.string.validation_success)
-    }
-
-    /**
      * method that checks if the email is not empty and and matches the email pattern
      * @param email text that will be considered as a email
-     * @return a class with a boolean field with the validation result
-     * and a string resource id with the validation result message
+     * @return aa value of type EmailValidationResult,
+     *  which indicates the result of password validation.
      */
-    fun validateEmail(email: String): ValidationResult {
+    fun validateEmail(email: String): EmailValidationResult {
         return if (email.isBlank())
-            ValidationResult(false, R.string.empty_field_validation_error)
-        else if (!PatternsCompat.EMAIL_ADDRESS.matcher(email).matches())
-            ValidationResult(false, R.string.email_validation_incorrect_email)
+            EmailValidationResult.BLANK
+        else if (!email.matches(Regex(EMAIL_PATTERN)))
+            EmailValidationResult.INVALID
         else
-            ValidationResult(true, R.string.validation_success)
+            EmailValidationResult.VALID
     }
 
     /**
      * method that checks if the email is not empty and and matches the password pattern
      * @param password text that will be considered as a password
-     * @return a class with a boolean field with the validation result
-     * and a string resource id with the validation result message
+     * @return a value of type PasswordValidationResult,
+     * which indicates the result of password validation.
      */
-    fun validatePassword(password: String): ValidationResult {
+    fun validatePassword(password: String): PasswordValidationResult {
         return if (password.isBlank())
-            ValidationResult(false, R.string.empty_field_validation_error)
-        else if(password.length<minimumPasswordLength || password.length>maximumPasswordLength)
-            ValidationResult(false,R.string.password_validation_length_error)
-        else if (!password.matches(Regex(passwordPattern)))
-            ValidationResult(false, R.string.password_validation_error)
-        else ValidationResult(true, R.string.validation_success)
+            PasswordValidationResult.BLANK
+        else if (password.length < MINIMUM_PASSWORD_LENGTH || password.length > MAXIMUM_PASSWORD_LENGTH)
+            PasswordValidationResult.LENGTH_ERROR
+        else if (!password.matches(Regex(PASSWORD_PATTERN)))
+            PasswordValidationResult.INVALID
+        else PasswordValidationResult.VALID
     }
-
 }
