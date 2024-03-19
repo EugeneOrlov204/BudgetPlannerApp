@@ -3,16 +3,19 @@ package com.shpp.budget.planner.presentation.addScreen
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -30,13 +33,13 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -51,13 +54,17 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddScreen() {
-    AddScreenContent()
+    AddScreenContent(selectedCategory = TransactionCategory.BEAUTY)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AddScreenContent() {
-    val pagerState = rememberPagerState(pageCount = { AddScreenTab.entries.size })
+fun AddScreenContent(
+    selectedCategory: TransactionCategory?,
+    onCategoryClick: (TransactionCategory) -> Unit = {},
+    onConfirmClick: (isExpense: Boolean, amount: String, fraction: String) -> Unit = { _, _, _ -> }
+) {
+    val pagerState = rememberPagerState(initialPage = 1, pageCount = { AddScreenTab.entries.size })
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
@@ -120,37 +127,55 @@ fun AddScreenContent() {
         HorizontalPager(
             modifier = Modifier
                 .padding(innerPadding)
-                .background(color = MaterialTheme.colorScheme.surface)
-                .padding(horizontal = dimensionResource(id = R.dimen.add_screen_content_padding_horizontal)),
+                .background(color = MaterialTheme.colorScheme.surface),
             state = pagerState
         ) { index ->
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                item {
-                    when (index) {
-                        0 -> {
-                            Text(text = "Hello")
+            when (index) {
+                0 -> {
+                    val amount = rememberSaveable { mutableStateOf("89") }
+                    val fraction = rememberSaveable { mutableStateOf("00") }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = dimensionResource(id = R.dimen.add_screen_content_padding_horizontal))
+                    ) {
+                        item {
+                            InputFields(amount = amount, fraction = fraction)
                         }
-
-                        1 -> {
-                            Text(text = "World")
+                        item {
+                            ConfirmButton(onClick = {
+                                onConfirmClick(false, amount.value, fraction.value)
+                            })
                         }
                     }
                 }
-                item { Categories() }
-                item {
-                    Button(
+
+                1 -> {
+                    val amount = rememberSaveable { mutableStateOf("89") }
+                    val fraction = rememberSaveable { mutableStateOf("00") }
+                    LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimensionResource(R.dimen.add_screen_confirm_button_padding_vertical))
-                            .padding(bottom = dimensionResource(R.dimen.bottom_app_bar_padding_top)),
-                        colors = ButtonDefaults.buttonColors()
-                            .copy(
-                                containerColor = MaterialTheme.colorScheme.secondary,
-                                contentColor = MaterialTheme.colorScheme.onSecondary
-                            ),
-                        onClick = { /*TODO*/ }
+                            .fillMaxSize()
+                            .padding(horizontal = dimensionResource(id = R.dimen.add_screen_content_padding_horizontal))
                     ) {
-                        Text(text = stringResource(R.string.confirm))
+                        item {
+                            InputFields(
+                                isIncome = false,
+                                amount = amount,
+                                fraction = fraction
+                            )
+                        }
+                        item {
+                            Categories(
+                                selectedCategory = selectedCategory,
+                                onCategoryClick = onCategoryClick
+                            )
+                        }
+                        item {
+                            ConfirmButton(onClick = {
+                                onConfirmClick(true, amount.value, fraction.value)
+                            })
+                        }
                     }
                 }
             }
@@ -158,9 +183,73 @@ fun AddScreenContent() {
     }
 }
 
+@Composable
+private fun InputFields(
+    isIncome: Boolean = true, amount: MutableState<String>, fraction: MutableState<String>
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = dimensionResource(id = R.dimen.add_screen_input_padding_vertical)),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = if (isIncome) "+" else "-",
+            style = MaterialTheme.typography.displayMedium
+        )
+        BasicTextField(
+            modifier = Modifier
+                .weight(1f, false)
+                .width(IntrinsicSize.Min),
+            value = amount.value,
+            onValueChange = {
+                val srtBuilder = StringBuilder()
+                run breaking@{
+                    it.forEach { char ->
+                        if (char.isDigit()) {
+                            srtBuilder.append(char)
+                        }
+                    }
+                }
+                amount.value = if (srtBuilder.isEmpty()) "0" else srtBuilder.toString()
+            },
+            textStyle = MaterialTheme.typography.displayMedium,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            singleLine = true
+        )
+        Text(text = ",", style = MaterialTheme.typography.displayMedium)
+        BasicTextField(
+            modifier = Modifier.width(IntrinsicSize.Min),
+            value = fraction.value,
+            onValueChange = {
+                val srtBuilder = StringBuilder()
+                run breaking@{
+                    it.forEach { char ->
+                        if (char.isDigit()) {
+                            srtBuilder.append(char)
+                        }
+                        if (srtBuilder.length == 2) return@breaking
+                    }
+                }
+                for (i in 1..2 - srtBuilder.length) {
+                    srtBuilder.append("0")
+                }
+                fraction.value = srtBuilder.toString()
+            },
+            textStyle = MaterialTheme.typography.displayMedium,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            singleLine = true
+        )
+        Text(text = "$", style = MaterialTheme.typography.displayMedium)
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Categories() {
+private fun Categories(
+    selectedCategory: TransactionCategory?,
+    onCategoryClick: (TransactionCategory) -> Unit
+) {
     Column {
         Text(text = stringResource(R.string.from_category))
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.add_screen_category_padding_bottom)))
@@ -176,11 +265,17 @@ private fun Categories() {
             TransactionCategory.entries.forEach {
                 Icon(
                     modifier = Modifier
+                        .background(
+                            color = if (selectedCategory == it) it.color.copy(alpha = 0.5f) else Color.Transparent,
+                            shape = CircleShape
+                        )
                         .border(
                             width = dimensionResource(id = R.dimen.add_screen_category_icon_boarder_width),
                             shape = CircleShape,
                             color = it.color
                         )
+                        .clip(CircleShape)
+                        .clickable { onCategoryClick(it) }
                         .padding(dimensionResource(id = R.dimen.add_screen_category_icon_padding)),
                     imageVector = it.icon,
                     contentDescription = it.name,
@@ -191,12 +286,30 @@ private fun Categories() {
     }
 }
 
+@Composable
+private fun ConfirmButton(onClick: () -> Unit) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = dimensionResource(R.dimen.add_screen_confirm_button_padding_vertical))
+            .padding(bottom = dimensionResource(R.dimen.bottom_app_bar_padding_top)),
+        colors = ButtonDefaults.buttonColors()
+            .copy(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            ),
+        onClick = onClick
+    ) {
+        Text(text = stringResource(R.string.confirm))
+    }
+}
+
 @PreviewLightDark
 @PreviewScreenSizes
 @Preview
 @Composable
 private fun AddScreenPreview() {
     BudgetPlannerAppTheme {
-        AddScreenContent()
+        AddScreenContent(selectedCategory = TransactionCategory.BEAUTY)
     }
 }

@@ -73,4 +73,5 @@
     <dimen name="add_screen_category_row_padding_vertical">23dp</dimen>
     <dimen name="add_screen_confirm_button_padding_vertical">20dp</dimen>
     <dimen name="add_screen_content_padding_horizontal">50dp</dimen>
+    <dimen name="add_screen_input_padding_vertical">25dp</dimen>
 </resources>
