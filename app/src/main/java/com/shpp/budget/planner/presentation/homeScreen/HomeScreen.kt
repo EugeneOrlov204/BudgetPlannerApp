@@ -38,7 +38,11 @@ import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onLoggedOut: () -> Unit) {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+    onLoggedOut: () -> Unit,
+    onPlusClick: () -> Unit,
+) {
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     when (isLoggedIn) {
         null -> {
@@ -55,7 +59,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onLoggedOut: () -> Un
             month = viewModel.month.collectAsState().value,
             budget = viewModel.budget.collectAsState().value,
             income = viewModel.income.collectAsState().value,
-            expenses = viewModel.expenses.collectAsState().value
+            expenses = viewModel.expenses.collectAsState().value,
+            onPlusClick = onPlusClick
         )
 
         false -> LaunchedEffect(isLoggedIn) {
@@ -70,7 +75,8 @@ fun HomeScreenContent(
     month: String,
     budget: String,
     income: String,
-    expenses: String
+    expenses: String,
+    onPlusClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -87,7 +93,12 @@ fun HomeScreenContent(
                 )
             }
         },
-        bottomBar = { BottomAppBar(currentScreen = BottomBarScreen.HOME) }
+        bottomBar = {
+            BottomAppBar(
+                currentScreen = BottomBarScreen.HOME,
+                onPlusClick = onPlusClick
+            )
+        }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
