@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.shpp.budget.planner.presentation.addScreen.AddScreen
+import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.homeScreen.HomeScreen
 import com.shpp.budget.planner.presentation.signInScreen.SignInScreen
 import com.shpp.budget.planner.presentation.signUpScreen.SignUpScreen
@@ -25,7 +26,16 @@ fun Navigation() {
                 })
         }
         composable(Screen.Add.route) {
-            AddScreen()
+            AddScreen(onScreenClick = {
+                when (it) {
+                    BottomBarScreen.HOME ->
+                        navController.performIfCurrentDestinationDoesntMatch(Screen.Home.route) {
+                            navController.navigate(Screen.Home.route)
+                        }
+
+                    else -> {}
+                }
+            })
         }
         navigation(route = Screen.Auth.route, startDestination = Screen.Auth.SignIn.route) {
             composable(Screen.Auth.SignUp.route) {

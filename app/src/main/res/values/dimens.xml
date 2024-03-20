@@ -67,6 +67,7 @@
     <dimen name="top_app_bar_padding_vertical">32dp</dimen>
 
     <!--Add screen-->
+    <dimen name="add_screen_calendar_icon_padding">10dp</dimen>
     <dimen name="add_screen_category_icon_boarder_width">2dp</dimen>
     <dimen name="add_screen_category_icon_padding">10dp</dimen>
     <dimen name="add_screen_category_padding_bottom">12dp</dimen>

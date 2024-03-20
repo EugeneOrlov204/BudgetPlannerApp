@@ -43,8 +43,11 @@
 
     <!--Add screen-->
     <string name="add_transaction">Add transaction</string>
+    <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="date">Date</string>
     <string name="from_category">From category</string>
     <string name="new_expense">New expense</string>
     <string name="new_income"> New income</string>
+    <string name="ok">OK</string>
 </resources>

@@ -22,6 +22,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -34,9 +36,13 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,25 +53,44 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.components.BottomAppBar
+import com.shpp.budget.planner.presentation.components.BottomBarScreen
+import com.shpp.budget.planner.presentation.navigation.AddViewModel
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddScreen() {
-    AddScreenContent(selectedCategory = TransactionCategory.BEAUTY)
+fun AddScreen(
+    viewModel: AddViewModel = hiltViewModel(),
+    onScreenClick: (screen: BottomBarScreen) -> Unit
+) {
+    AddScreenContent(
+        selectedDate = viewModel.selectedDate.collectAsState().value,
+        selectedDateFormatted = viewModel.selectedDateString.collectAsState().value,
+        onSelectDate = viewModel::updateDate,
+        selectedCategory = viewModel.selectedCategory.collectAsState().value,
+        onCategoryClick = viewModel::selectCategory,
+        onScreenClick = onScreenClick,
+        onConfirmClick = viewModel::addTransaction
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddScreenContent(
+    selectedDate: Long = 0,
+    selectedDateFormatted: String,
+    onSelectDate: (Long) -> Unit = {},
     selectedCategory: TransactionCategory?,
     onCategoryClick: (TransactionCategory) -> Unit = {},
+    onScreenClick: (screen: BottomBarScreen) -> Unit = {},
     onConfirmClick: (isExpense: Boolean, amount: String, fraction: String) -> Unit = { _, _, _ -> }
 ) {
-    val pagerState = rememberPagerState(initialPage = 1, pageCount = { AddScreenTab.entries.size })
+    val pagerState = rememberPagerState(pageCount = { AddScreenTab.entries.size })
     val coroutineScope = rememberCoroutineScope()
+    var shouldShowPicker by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.primary)) {
@@ -122,7 +147,7 @@ fun AddScreenContent(
                 }
             }
         },
-        bottomBar = { BottomAppBar() }
+        bottomBar = { BottomAppBar(onScreenClick = onScreenClick) }
     ) { innerPadding ->
         HorizontalPager(
             modifier = Modifier
@@ -132,7 +157,7 @@ fun AddScreenContent(
         ) { index ->
             when (index) {
                 0 -> {
-                    val amount = rememberSaveable { mutableStateOf("89") }
+                    val amount = rememberSaveable { mutableStateOf("0") }
                     val fraction = rememberSaveable { mutableStateOf("00") }
                     LazyColumn(
                         modifier = Modifier
@@ -143,6 +168,12 @@ fun AddScreenContent(
                             InputFields(amount = amount, fraction = fraction)
                         }
                         item {
+                            Date(
+                                selectedDateFormatted = selectedDateFormatted,
+                                onCalendarClick = { shouldShowPicker = true }
+                            )
+                        }
+                        item {
                             ConfirmButton(onClick = {
                                 onConfirmClick(false, amount.value, fraction.value)
                             })
@@ -151,7 +182,7 @@ fun AddScreenContent(
                 }
 
                 1 -> {
-                    val amount = rememberSaveable { mutableStateOf("89") }
+                    val amount = rememberSaveable { mutableStateOf("0") }
                     val fraction = rememberSaveable { mutableStateOf("00") }
                     LazyColumn(
                         modifier = Modifier
@@ -163,6 +194,12 @@ fun AddScreenContent(
                                 isIncome = false,
                                 amount = amount,
                                 fraction = fraction
+                            )
+                        }
+                        item {
+                            Date(
+                                selectedDateFormatted = selectedDateFormatted,
+                                onCalendarClick = { shouldShowPicker = true }
                             )
                         }
                         item {
@@ -179,6 +216,13 @@ fun AddScreenContent(
                     }
                 }
             }
+        }
+        if (shouldShowPicker) {
+            DatePickerDialog(
+                currentDate = selectedDate,
+                onSubmitDate = onSelectDate,
+                onDismissRequest = { shouldShowPicker = false }
+            )
         }
     }
 }
@@ -241,6 +285,24 @@ private fun InputFields(
             singleLine = true
         )
         Text(text = "$", style = MaterialTheme.typography.displayMedium)
+    }
+}
+
+@Composable
+fun Date(selectedDateFormatted: String, onCalendarClick: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = "${stringResource(R.string.date)}: $selectedDateFormatted",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Icon(
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { onCalendarClick() }
+                .padding(dimensionResource(id = R.dimen.add_screen_calendar_icon_padding)),
+            imageVector = Icons.Filled.CalendarMonth,
+            contentDescription = null
+        )
     }
 }
 
@@ -310,6 +372,9 @@ private fun ConfirmButton(onClick: () -> Unit) {
 @Composable
 private fun AddScreenPreview() {
     BudgetPlannerAppTheme {
-        AddScreenContent(selectedCategory = TransactionCategory.BEAUTY)
+        AddScreenContent(
+            selectedDateFormatted = "Mar 19,2024",
+            selectedCategory = TransactionCategory.BEAUTY
+        )
     }
 }
