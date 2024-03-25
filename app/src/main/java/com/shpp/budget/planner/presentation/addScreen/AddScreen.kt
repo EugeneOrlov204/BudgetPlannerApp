@@ -1,5 +1,6 @@
 package com.shpp.budget.planner.presentation.addScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -57,7 +59,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
-import com.shpp.budget.planner.presentation.navigation.AddViewModel
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import kotlinx.coroutines.launch
 
@@ -66,6 +67,9 @@ fun AddScreen(
     viewModel: AddViewModel = hiltViewModel(),
     onScreenClick: (screen: BottomBarScreen) -> Unit
 ) {
+    val appContext = LocalContext.current.applicationContext
+    val unknownErrorStr = stringResource(id = R.string.unknown_error)
+    val transactionAddedStr = stringResource(id = R.string.transaction_added)
     AddScreenContent(
         selectedDate = viewModel.selectedDate.collectAsState().value,
         selectedDateFormatted = viewModel.selectedDateString.collectAsState().value,
@@ -73,7 +77,20 @@ fun AddScreen(
         selectedCategory = viewModel.selectedCategory.collectAsState().value,
         onCategoryClick = viewModel::selectCategory,
         onScreenClick = onScreenClick,
-        onConfirmClick = viewModel::addTransaction
+        onConfirmClick = { isExpense: Boolean, amount: String, fraction: String ->
+            viewModel.addTransaction(
+                isExpense = isExpense,
+                amount = amount,
+                fraction = fraction,
+                onSuccess = {
+                    Toast.makeText(appContext, transactionAddedStr, Toast.LENGTH_SHORT).show()
+                },
+                onFailure = {
+                    Toast.makeText(appContext, it.ifEmpty { unknownErrorStr }, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            )
+        }
     )
 }
 

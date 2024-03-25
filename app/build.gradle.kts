@@ -95,6 +95,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     // Firebase Auth
     implementation("com.google.firebase:firebase-auth:${Dependencies.firebaseAuth}")
+    implementation("com.google.firebase:firebase-firestore")
 
     // Material Icons extended
     implementation("androidx.compose.material:material-icons-extended:${Dependencies.materialIconsExtended}")

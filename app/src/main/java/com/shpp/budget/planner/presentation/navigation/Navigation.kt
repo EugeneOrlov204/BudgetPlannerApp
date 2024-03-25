@@ -30,7 +30,7 @@ fun Navigation() {
                 when (it) {
                     BottomBarScreen.HOME ->
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Home.route) {
-                            navController.navigate(Screen.Home.route)
+                            navController.navigateUp()
                         }
 
                     else -> {}
