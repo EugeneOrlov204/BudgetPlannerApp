@@ -1,14 +1,12 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -23,7 +21,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -33,7 +30,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -48,7 +44,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
-import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
 fun SignUpScreen(
@@ -91,16 +86,7 @@ fun SignUpScreenContent(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.background
-                    )
-                )
-            )
-            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding)),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
@@ -110,7 +96,7 @@ fun SignUpScreenContent(
         )
         TextFieldsWithButton(
             modifier = Modifier
-                .weight(2.5f)
+                .weight(4.5f)
                 .fillMaxWidth(0.9f),
             onSignUpButtonClick = { email, password ->
                 onSignUpButtonClick(email, password)
@@ -118,7 +104,7 @@ fun SignUpScreenContent(
         )
         Footer(
             modifier = Modifier
-                .weight(1.5f)
+                .weight(1.1f)
                 .fillMaxSize()
         ) {
             onSignIn()
@@ -163,15 +149,10 @@ fun TextFieldsWithButton(
             },
             singleLine = true,
             label = { Text(text = stringResource(id = R.string.sign_up_screen_email_text_field)) },
-            colors = TextFieldDefaults.colors(
-                focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
-                cursorColor = MaterialTheme.colorScheme.onPrimary
-            ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
         )
 
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_fields)))
+        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
 
         OutlinedTextField(
             modifier = Modifier
@@ -183,17 +164,12 @@ fun TextFieldsWithButton(
             },
             singleLine = true,
             label = { Text(text = stringResource(id = R.string.sign_up_screen_password_text_field)) },
-            colors = TextFieldDefaults.colors(
-                focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
-                cursorColor = MaterialTheme.colorScheme.onPrimary
-            ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             visualTransformation =
             if (isPasswordVisible) {
                 VisualTransformation.None
             } else {
-                PasswordVisualTransformation(PASSWORD_MASK)
+                PasswordVisualTransformation()
             },
             trailingIcon = {
                 IconButton(
@@ -208,7 +184,7 @@ fun TextFieldsWithButton(
             }
         )
 
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_field_and_button)))
+        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
 
         ElevatedButton(
             modifier = Modifier
@@ -216,7 +192,7 @@ fun TextFieldsWithButton(
                 .height(dimensionResource(id = R.dimen.sign_up_screen_button_height)),
             shape = RoundedCornerShape(dimensionResource(id = R.dimen.sign_up_screen_button_corner_radius)),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+                MaterialTheme.colorScheme.primary
             ),
             elevation = ButtonDefaults.buttonElevation(dimensionResource(id = R.dimen.sign_up_screen_button_elevation)),
             onClick = {
@@ -225,8 +201,8 @@ fun TextFieldsWithButton(
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up_screen_create_account_button),
-                color = MaterialTheme.colorScheme.onSecondary,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.background
             )
         }
     }

@@ -108,15 +108,7 @@ fun SignInScreenContent(
 ) {
     Column(
         Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(
-                    listOf(
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme.background
-                    )
-                )
-            ),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
