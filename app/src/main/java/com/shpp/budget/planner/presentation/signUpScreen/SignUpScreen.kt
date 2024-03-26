@@ -1,6 +1,7 @@
 package com.shpp.budget.planner.presentation.signUpScreen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -86,7 +89,15 @@ fun SignUpScreenContent(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background
+                    )
+                )
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
@@ -150,6 +161,9 @@ fun TextFieldsWithButton(
             singleLine = true,
             label = { Text(text = stringResource(id = R.string.sign_up_screen_email_text_field)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
 
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
@@ -181,7 +195,10 @@ fun TextFieldsWithButton(
                         contentDescription = null
                     )
                 }
-            }
+            },
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
 
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
