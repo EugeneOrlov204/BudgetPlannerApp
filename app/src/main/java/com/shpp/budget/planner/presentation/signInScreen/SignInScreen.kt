@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -110,9 +111,9 @@ fun SignInScreenContent(
         Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.linearGradient(
-                    listOf(
-                        MaterialTheme.colorScheme.surface,
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background
                     )
                 )
@@ -175,7 +176,10 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
             value = email, onValueChange = { email = it },
             label = { Text(text = stringResource(R.string.email)) },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
         OutlinedTextField(
             value = password, onValueChange = {
@@ -205,7 +209,10 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                         color = MaterialTheme.colorScheme.error
                     )
                 }
-            }
+            },
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         Button(
