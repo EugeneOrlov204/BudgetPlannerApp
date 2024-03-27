@@ -25,22 +25,33 @@
 
     <!-- Expense screen -->
     <!-- Views -->
-    <dimen name="expense_screen_header_text_start_padding">40dp</dimen>
-    <dimen name="expense_screen_header_text_top_padding">40dp</dimen>
-    <dimen name="expense_screen_header_text_bottom_padding">18dp</dimen>
-    <dimen name="expense_screen_horizontal_padding">16dp</dimen>
-    <dimen name="expense_screen_shadow_size">2dp</dimen>
-    <dimen name="expense_screen_box_corner_radius">4dp</dimen>
-    <dimen name="expense_screen_space_between_header_and_balance_board">30dp</dimen>
-    <dimen name="expense_screen_balance_board_vertical_padding">30dp</dimen>
     <dimen name="expense_screen_balance_board_horizontal_padding">36dp</dimen>
+    <dimen name="expense_screen_balance_board_vertical_padding">30dp</dimen>
     <dimen name="expense_screen_between_balance_text_space">4dp</dimen>
     <dimen name="expense_screen_between_transaction_item_space">16dp</dimen>
-    <dimen name="expense_screen_transaction_icon_vertical_padding">8dp</dimen>
-    <dimen name="expense_screen_space_between_transaction_image_and_text">10dp</dimen>
+    <dimen name="expense_screen_box_corner_radius">4dp</dimen>
+    <dimen name="expense_screen_budget_month_amount_text_size">21sp</dimen>
+    <dimen name="expense_screen_budget_moth_column_corner_radius">30dp</dimen>
+    <dimen name="expense_screen_budget_moth_progress_bar_height">6dp</dimen>
+    <dimen name="expense_screen_budget_moth_progress_bar_top_padding">14dp</dimen>
+    <dimen name="expense_screen_budget_progress_top_space">24dp</dimen>
     <dimen name="expense_screen_cash_transactions_column_vertical_padding">20dp</dimen>
+    <dimen name="expense_screen_divide_transaction_item_text_space">6dp</dimen>
     <dimen name="expense_screen_divider_thickness">1dp</dimen>
+    <dimen name="expense_screen_expense_column_title_padding">24dp</dimen>
+    <dimen name="expense_screen_graph_horizontal_padding">8dp</dimen>
+    <dimen name="expense_screen_graph_values_font_size">14sp</dimen>
+    <dimen name="expense_screen_graph_vertical_padding">12dp</dimen>
+    <dimen name="expense_screen_header_text_bottom_padding">18dp</dimen>
     <dimen name="expense_screen_header_text_size">18sp</dimen>
+    <dimen name="expense_screen_header_text_start_padding">40dp</dimen>
+    <dimen name="expense_screen_header_text_top_padding">40dp</dimen>
+    <dimen name="expense_screen_horizontal_padding">16dp</dimen>
+    <dimen name="expense_screen_selected_month_budget_font_size">12sp</dimen>
+    <dimen name="expense_screen_shadow_size">2dp</dimen>
+    <dimen name="expense_screen_space_between_header_and_balance_board">30dp</dimen>
+    <dimen name="expense_screen_space_between_transaction_image_and_text">12dp</dimen>
+    <dimen name="expense_screen_transaction_icon_padding">8dp</dimen>
 
     <!-- Bottom app bar -->
     <dimen name="bottom_app_bar_central_button_icon_size">24dp</dimen>
