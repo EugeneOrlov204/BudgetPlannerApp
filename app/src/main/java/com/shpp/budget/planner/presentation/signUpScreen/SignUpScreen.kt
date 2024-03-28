@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -46,6 +47,9 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.domain.validation.AuthValidator
+import com.shpp.budget.planner.domain.validation.EmailValidationResult
+import com.shpp.budget.planner.domain.validation.PasswordValidationResult
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
 @Composable
@@ -145,7 +149,9 @@ fun TextFieldsWithButton(
     var emailText by rememberSaveable { mutableStateOf("") }
     var passwordText by rememberSaveable { mutableStateOf("") }
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
-
+    var emailValidationState by rememberSaveable { mutableStateOf(EmailValidationResult.VALID) }
+    var passwordValidationState by rememberSaveable { mutableStateOf(PasswordValidationResult.VALID) }
+    val validator = AuthValidator()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -165,8 +171,16 @@ fun TextFieldsWithButton(
                 focusedLabelColor = MaterialTheme.colorScheme.background
             )
         )
-
-        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
+        Text(
+            text = getEmailValidationMessage(emailValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
+                )
+        )
 
         OutlinedTextField(
             modifier = Modifier
@@ -200,7 +214,16 @@ fun TextFieldsWithButton(
                 focusedLabelColor = MaterialTheme.colorScheme.background
             )
         )
-
+        Text(
+            text = getPasswordValidationMessage(passwordValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
+                )
+        )
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
 
         ElevatedButton(
@@ -213,7 +236,14 @@ fun TextFieldsWithButton(
             ),
             elevation = ButtonDefaults.buttonElevation(dimensionResource(id = R.dimen.sign_up_screen_button_elevation)),
             onClick = {
-                onSignUpButtonClick(emailText, passwordText)
+                emailValidationState = validator.validateEmail(emailText)
+                passwordValidationState = validator.validatePassword(passwordText)
+
+                if (emailValidationState == EmailValidationResult.VALID &&
+                    passwordValidationState == PasswordValidationResult.VALID
+                ) {
+                    onSignUpButtonClick(emailText, passwordText)
+                }
             }
         ) {
             Text(
@@ -224,6 +254,25 @@ fun TextFieldsWithButton(
         }
     }
 
+}
+
+@Composable
+fun getPasswordValidationMessage(validationState: PasswordValidationResult): String {
+    return when (validationState) {
+        PasswordValidationResult.BLANK -> stringResource(R.string.empty_field_validation_error)
+        PasswordValidationResult.LENGTH_ERROR -> stringResource(R.string.password_validation_length_error)
+        PasswordValidationResult.INVALID -> stringResource(R.string.password_validation_error)
+        else -> ""
+    }
+}
+
+@Composable
+fun getEmailValidationMessage(validationState: EmailValidationResult): String {
+    return when (validationState) {
+        EmailValidationResult.BLANK -> stringResource(R.string.empty_field_validation_error)
+        EmailValidationResult.INVALID -> stringResource(R.string.email_validation_incorrect_email)
+        else -> ""
+    }
 }
 
 @Composable

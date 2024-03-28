@@ -20,7 +20,7 @@
     <string name="sign_up_button_label">Don’t have an account yet?</string>
     <string name="sign_up_button_text">Sign Up</string>
 
-    <!-- Expense screen -->
+    <!--Expense screen -->
     <string name="expense_screen_ING_account">ING account</string>
     <string name="expense_screen_brd_account">BRD account</string>
     <string name="expense_screen_cash_transactions_title">Cash</string>
@@ -40,4 +40,10 @@
     <string name="income">Income</string>
     <string name="placeholder_text">Lorem ipsum dolor sit amet, consectetur adipisci.</string>
     <string name="see_details">See details</string>
+
+    <!--Validation-->
+    <string name="email_validation_incorrect_email">Incorrect email</string>
+    <string name="empty_field_validation_error">Cannot be blank</string>
+    <string name="password_validation_error">Password must contain one digit, one lowercase and uppercase letter, one special character</string>
+    <string name="password_validation_length_error">Password must be 8–16 characters long</string>
 </resources>

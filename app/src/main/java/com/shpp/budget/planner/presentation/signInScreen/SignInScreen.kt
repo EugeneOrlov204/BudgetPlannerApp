@@ -53,6 +53,11 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.domain.validation.AuthValidator
+import com.shpp.budget.planner.domain.validation.EmailValidationResult
+import com.shpp.budget.planner.domain.validation.PasswordValidationResult
+import com.shpp.budget.planner.presentation.signUpScreen.getEmailValidationMessage
+import com.shpp.budget.planner.presentation.signUpScreen.getPasswordValidationMessage
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
 
@@ -169,8 +174,9 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    var isError by rememberSaveable { mutableStateOf(false) }
-
+    var emailValidationState by rememberSaveable { mutableStateOf(EmailValidationResult.VALID) }
+    var passwordValidationState by rememberSaveable { mutableStateOf(PasswordValidationResult.VALID) }
+    val validator = AuthValidator()
     Column(modifier = modifier) {
         OutlinedTextField(
             value = email, onValueChange = { email = it },
@@ -181,14 +187,25 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                 focusedLabelColor = MaterialTheme.colorScheme.background
             )
         )
+
+        Text(
+            text = getEmailValidationMessage(emailValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
+                )
+        )
         OutlinedTextField(
-            value = password, onValueChange = {
+            value = password,
+            onValueChange = {
                 password = it
             },
             label = { Text(text = stringResource(R.string.password)) },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier
-                .offset(y = dimensionResource(R.dimen.divide_input_fields_space))
                 .fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             trailingIcon = {
@@ -201,23 +218,32 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                     Icon(imageVector = iconImage, contentDescription = description)
                 }
             },
-            supportingText = {
-                if (isError) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.input_password_error),
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            },
             colors = TextFieldDefaults.colors(
                 focusedLabelColor = MaterialTheme.colorScheme.background
             )
         )
+        Text(
+            text = getPasswordValidationMessage(passwordValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
+                )
+
+        )
         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         Button(
             onClick = {
-                onLoggedIn(email, password)
+                emailValidationState = validator.validateEmail(email)
+                passwordValidationState = validator.validatePassword(password)
+
+                if (emailValidationState == EmailValidationResult.VALID &&
+                    passwordValidationState == PasswordValidationResult.VALID
+                ) {
+                    onLoggedIn(email, password)
+                }
             },
             shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
             modifier = Modifier
@@ -227,7 +253,6 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                 MaterialTheme.colorScheme.primary
             )
         ) {
-
             Text(
                 text = stringResource(id = R.string.sign_in),
                 style = MaterialTheme.typography.titleMedium,
@@ -236,7 +261,6 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
         }
     }
 }
-
 @Composable
 fun SignInWithGoogle(modifier: Modifier) {
     Column(
