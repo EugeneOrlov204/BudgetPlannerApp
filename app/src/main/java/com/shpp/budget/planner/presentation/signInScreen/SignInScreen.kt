@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -26,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -114,9 +116,9 @@ fun SignInScreenContent(
         Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.linearGradient(
-                    listOf(
-                        MaterialTheme.colorScheme.surface,
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background
                     )
                 )
@@ -180,8 +182,12 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
             value = email, onValueChange = { email = it },
             label = { Text(text = stringResource(R.string.email)) },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
+
         Text(
             text = getEmailValidationMessage(emailValidationState),
             color = MaterialTheme.colorScheme.error,
@@ -212,6 +218,9 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                     Icon(imageVector = iconImage, contentDescription = description)
                 }
             },
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
         Text(
             text = getPasswordValidationMessage(passwordValidationState),
@@ -222,6 +231,7 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                 .padding(
                     top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
                 )
+
         )
         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         Button(
@@ -251,7 +261,6 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
         }
     }
 }
-
 @Composable
 fun SignInWithGoogle(modifier: Modifier) {
     Column(

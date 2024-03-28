@@ -51,7 +51,6 @@ import com.shpp.budget.planner.domain.validation.AuthValidator
 import com.shpp.budget.planner.domain.validation.EmailValidationResult
 import com.shpp.budget.planner.domain.validation.PasswordValidationResult
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
-import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
 fun SignUpScreen(
@@ -102,8 +101,7 @@ fun SignUpScreenContent(
                         MaterialTheme.colorScheme.background
                     )
                 )
-            )
-            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding)),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
@@ -113,7 +111,7 @@ fun SignUpScreenContent(
         )
         TextFieldsWithButton(
             modifier = Modifier
-                .weight(2.5f)
+                .weight(4.5f)
                 .fillMaxWidth(0.9f),
             onSignUpButtonClick = { email, password ->
                 onSignUpButtonClick(email, password)
@@ -121,7 +119,7 @@ fun SignUpScreenContent(
         )
         Footer(
             modifier = Modifier
-                .weight(1.5f)
+                .weight(1.1f)
                 .fillMaxSize()
         ) {
             onSignIn()
@@ -168,14 +166,11 @@ fun TextFieldsWithButton(
             },
             singleLine = true,
             label = { Text(text = stringResource(id = R.string.sign_up_screen_email_text_field)) },
-            colors = TextFieldDefaults.colors(
-                focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
-                cursorColor = MaterialTheme.colorScheme.onPrimary
-            ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
             )
+        )
         Text(
             text = getEmailValidationMessage(emailValidationState),
             color = MaterialTheme.colorScheme.error,
@@ -183,9 +178,10 @@ fun TextFieldsWithButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = dimensionResource(R.dimen.sign_up_validation_message_top_padding)
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
                 )
         )
+
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -196,22 +192,16 @@ fun TextFieldsWithButton(
             },
             singleLine = true,
             label = { Text(text = stringResource(id = R.string.sign_up_screen_password_text_field)) },
-            colors = TextFieldDefaults.colors(
-                focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
-                cursorColor = MaterialTheme.colorScheme.onPrimary
-            ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             visualTransformation =
             if (isPasswordVisible) {
                 VisualTransformation.None
             } else {
-                PasswordVisualTransformation(PASSWORD_MASK)
+                PasswordVisualTransformation()
             },
             trailingIcon = {
                 IconButton(
                     onClick = {
-
                         isPasswordVisible = !isPasswordVisible
                     }) {
                     Icon(
@@ -220,6 +210,9 @@ fun TextFieldsWithButton(
                     )
                 }
             },
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
         Text(
             text = getPasswordValidationMessage(passwordValidationState),
@@ -228,10 +221,10 @@ fun TextFieldsWithButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = dimensionResource(R.dimen.sign_up_validation_message_top_padding)
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
                 )
         )
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_field_and_button)))
+        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
 
         ElevatedButton(
             modifier = Modifier
@@ -239,7 +232,7 @@ fun TextFieldsWithButton(
                 .height(dimensionResource(id = R.dimen.sign_up_screen_button_height)),
             shape = RoundedCornerShape(dimensionResource(id = R.dimen.sign_up_screen_button_corner_radius)),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+                MaterialTheme.colorScheme.primary
             ),
             elevation = ButtonDefaults.buttonElevation(dimensionResource(id = R.dimen.sign_up_screen_button_elevation)),
             onClick = {
@@ -255,8 +248,8 @@ fun TextFieldsWithButton(
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up_screen_create_account_button),
-                color = MaterialTheme.colorScheme.onSecondary,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.background
             )
         }
     }
