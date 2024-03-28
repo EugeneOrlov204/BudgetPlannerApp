@@ -16,7 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,12 +70,13 @@ fun ExpenseScreen() {
             },
             stringResource(R.string.expense_screen_cash_transactions_title)
         )
-        Divider(    //TODO read warnings
-            color = MaterialTheme.colorScheme.onPrimary,
-            thickness = dimensionResource(R.dimen.expense_screen_divider_thickness),
+        HorizontalDivider(
             modifier = Modifier.padding(
                 horizontal = dimensionResource(R.dimen.expense_screen_horizontal_padding)
-            )
+            ),
+            thickness = dimensionResource(R.dimen.expense_screen_divider_thickness),
+
+            color = MaterialTheme.colorScheme.onPrimary
         )
         TransactionsColumn(
             Modifier.fillMaxWidth(),

@@ -47,8 +47,10 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.domain.validation.AuthValidator
+import com.shpp.budget.planner.domain.validation.EmailValidationResult
+import com.shpp.budget.planner.domain.validation.PasswordValidationResult
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
-import com.shpp.budget.planner.presentation.utils.PASSWORD_MASK
 
 @Composable
 fun SignUpScreen(
@@ -99,8 +101,7 @@ fun SignUpScreenContent(
                         MaterialTheme.colorScheme.background
                     )
                 )
-            )
-            .padding(horizontal = dimensionResource(id = R.dimen.sign_up_screen_main_column_padding)),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
@@ -110,7 +111,7 @@ fun SignUpScreenContent(
         )
         TextFieldsWithButton(
             modifier = Modifier
-                .weight(2.5f)
+                .weight(4.5f)
                 .fillMaxWidth(0.9f),
             onSignUpButtonClick = { email, password ->
                 onSignUpButtonClick(email, password)
@@ -118,7 +119,7 @@ fun SignUpScreenContent(
         )
         Footer(
             modifier = Modifier
-                .weight(1.5f)
+                .weight(1.1f)
                 .fillMaxSize()
         ) {
             onSignIn()
@@ -148,7 +149,9 @@ fun TextFieldsWithButton(
     var emailText by rememberSaveable { mutableStateOf("") }
     var passwordText by rememberSaveable { mutableStateOf("") }
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
-
+    var emailValidationState by rememberSaveable { mutableStateOf(EmailValidationResult.VALID) }
+    var passwordValidationState by rememberSaveable { mutableStateOf(PasswordValidationResult.VALID) }
+    val validator = AuthValidator()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -163,15 +166,21 @@ fun TextFieldsWithButton(
             },
             singleLine = true,
             label = { Text(text = stringResource(id = R.string.sign_up_screen_email_text_field)) },
-            colors = TextFieldDefaults.colors(
-                focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
-                cursorColor = MaterialTheme.colorScheme.onPrimary
-            ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
-
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_fields)))
+        Text(
+            text = getEmailValidationMessage(emailValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
+                )
+        )
 
         OutlinedTextField(
             modifier = Modifier
@@ -183,17 +192,12 @@ fun TextFieldsWithButton(
             },
             singleLine = true,
             label = { Text(text = stringResource(id = R.string.sign_up_screen_password_text_field)) },
-            colors = TextFieldDefaults.colors(
-                focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
-                cursorColor = MaterialTheme.colorScheme.onPrimary
-            ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             visualTransformation =
             if (isPasswordVisible) {
                 VisualTransformation.None
             } else {
-                PasswordVisualTransformation(PASSWORD_MASK)
+                PasswordVisualTransformation()
             },
             trailingIcon = {
                 IconButton(
@@ -205,10 +209,22 @@ fun TextFieldsWithButton(
                         contentDescription = null
                     )
                 }
-            }
+            },
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
-
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_field_and_button)))
+        Text(
+            text = getPasswordValidationMessage(passwordValidationState),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
+                )
+        )
+        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.divide_input_fields_space)))
 
         ElevatedButton(
             modifier = Modifier
@@ -216,21 +232,47 @@ fun TextFieldsWithButton(
                 .height(dimensionResource(id = R.dimen.sign_up_screen_button_height)),
             shape = RoundedCornerShape(dimensionResource(id = R.dimen.sign_up_screen_button_corner_radius)),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+                MaterialTheme.colorScheme.primary
             ),
             elevation = ButtonDefaults.buttonElevation(dimensionResource(id = R.dimen.sign_up_screen_button_elevation)),
             onClick = {
-                onSignUpButtonClick(emailText, passwordText)
+                emailValidationState = validator.validateEmail(emailText)
+                passwordValidationState = validator.validatePassword(passwordText)
+
+                if (emailValidationState == EmailValidationResult.VALID &&
+                    passwordValidationState == PasswordValidationResult.VALID
+                ) {
+                    onSignUpButtonClick(emailText, passwordText)
+                }
             }
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up_screen_create_account_button),
-                color = MaterialTheme.colorScheme.onSecondary,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.background
             )
         }
     }
 
+}
+
+@Composable
+fun getPasswordValidationMessage(validationState: PasswordValidationResult): String {
+    return when (validationState) {
+        PasswordValidationResult.BLANK -> stringResource(R.string.empty_field_validation_error)
+        PasswordValidationResult.LENGTH_ERROR -> stringResource(R.string.password_validation_length_error)
+        PasswordValidationResult.INVALID -> stringResource(R.string.password_validation_error)
+        else -> ""
+    }
+}
+
+@Composable
+fun getEmailValidationMessage(validationState: EmailValidationResult): String {
+    return when (validationState) {
+        EmailValidationResult.BLANK -> stringResource(R.string.empty_field_validation_error)
+        EmailValidationResult.INVALID -> stringResource(R.string.email_validation_incorrect_email)
+        else -> ""
+    }
 }
 
 @Composable

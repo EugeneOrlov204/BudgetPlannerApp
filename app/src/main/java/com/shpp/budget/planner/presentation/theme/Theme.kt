@@ -35,6 +35,7 @@ private val LightColorScheme = lightColorScheme(
     onTertiary = onTertiary,
     surface = surface,
     inverseOnSurface = clickableTextColor,
+    error = errorMessageColor,
     onPrimaryContainer = onPrimaryContainer,
     onSurfaceVariant = onSurfaceVariant,
 )
