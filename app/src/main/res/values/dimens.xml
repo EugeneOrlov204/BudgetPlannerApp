@@ -12,6 +12,7 @@
     <dimen name="sign_up_screen_default_padding">8dp</dimen>
     <dimen name="sign_up_screen_main_column_padding">55dp</dimen>
     <dimen name="sign_up_screen_footer_button_text_size">24sp</dimen>
+    <dimen name="sign_up_validation_message_top_padding">5dp</dimen>
 
     <!-- Sign in screen -->
     <!-- Views -->
@@ -22,6 +23,8 @@
     <dimen name="small_spacer">16dp</dimen>
     <dimen name="small_padding">16dp</dimen>
     <dimen name="sign_in_screen_button_sign_up_size">24sp</dimen>
+    <dimen name="sign_in_validation_message_top_padding">5dp</dimen>
+
 
     <!-- Expense screen -->
     <!-- Views -->

@@ -1,7 +1,6 @@
 package com.shpp.budget.planner.domain.useCases.auth
 
 import com.shpp.budget.planner.domain.repository.AuthRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LoginUserUseCase @Inject constructor(private val authRepository: AuthRepository) {

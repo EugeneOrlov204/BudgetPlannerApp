@@ -32,7 +32,8 @@ private val LightColorScheme = lightColorScheme(
     tertiary = tertiary,
     onTertiary = onTertiary,
     surface = surface,
-    inverseOnSurface = clickableTextColor
+    inverseOnSurface = clickableTextColor,
+    error = errorMessageColor
 )
 
 @Composable
