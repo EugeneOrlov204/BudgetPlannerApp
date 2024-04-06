@@ -102,8 +102,6 @@ dependencies {
     //Polygons
     implementation("androidx.graphics:graphics-shapes:${Dependencies.shapesVersion}")
 
-    //material
-    implementation("androidx.compose.material:material:${Dependencies.material}")
 }
 
 kapt {

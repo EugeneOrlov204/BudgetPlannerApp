@@ -22,5 +22,4 @@ object Dependencies {
     const val hiltVersion = "2.50"
     const val hiltNavVersion = "1.2.0"
     const val shapesVersion = "1.0.0-alpha05"
-    const val material="1.6.4"
 }

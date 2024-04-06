@@ -21,11 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomSheetScaffoldState
-import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -76,7 +73,7 @@ fun Preview() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit) {
     Scaffold(
@@ -87,14 +84,12 @@ fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit) {
             )
         }
     ) {
-        val scaffoldState = rememberBottomSheetScaffoldState(
-            bottomSheetState = rememberBottomSheetState(BottomSheetValue.Collapsed)
-        )
+
         BottomSheetScaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            scaffoldState = scaffoldState,
+            sheetDragHandle = null,
             sheetShape = RoundedCornerShape(
                 topStart = dimensionResource(R.dimen.expense_screen_budget_moth_column_corner_radius),
                 topEnd = dimensionResource(R.dimen.expense_screen_budget_moth_column_corner_radius)
@@ -113,7 +108,7 @@ fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit) {
                     },
                 )
             },
-            sheetPeekHeight = (LocalConfiguration.current.screenHeightDp * 0.38).dp
+            sheetPeekHeight = (LocalConfiguration.current.screenHeightDp * 0.42).dp
         ) {
             ExpenseScreenContent()
         }
@@ -122,6 +117,7 @@ fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit) {
 
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ExpenseScreenContent() {
     Column(
@@ -139,7 +135,7 @@ fun ExpenseScreenContent() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.4f),
-            Month.values().map { it.toString().take(3) },
+            Month.entries.map { it.toString().take(3) },
             points = listOf(
                 1000f,
                 204f,
@@ -441,6 +437,7 @@ fun getYValues(points: List<Float>): MutableList<Int> {
 
 @Composable
 fun BudgetProgress(totalBudget: Int, currentBudget: Int) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -494,14 +491,13 @@ fun TransactionsColumn(
 ) {
     Column(
         modifier = modifier
-            .padding(vertical = dimensionResource(R.dimen.expense_screen_cash_transactions_column_vertical_padding))
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .padding(top = dimensionResource(id = R.dimen.expense_screen_cash_transactions_column_vertical_padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.expense_screen_between_transaction_item_space))
     ) {
         Text(
             modifier = Modifier.padding(
                 start = dimensionResource(R.dimen.expense_screen_horizontal_padding),
-                top = dimensionResource(R.dimen.expense_screen_expense_column_title_padding)
             ),
             text = stringResource(R.string.expense_screen_expense_column_title_text),
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
