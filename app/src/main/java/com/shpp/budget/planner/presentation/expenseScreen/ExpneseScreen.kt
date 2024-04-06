@@ -492,7 +492,7 @@ fun TransactionsColumn(
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .padding(top = dimensionResource(id = R.dimen.expense_screen_cash_transactions_column_vertical_padding)),
+            .padding(vertical = dimensionResource(id = R.dimen.expense_screen_cash_transactions_column_vertical_padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.expense_screen_between_transaction_item_space))
     ) {
         Text(

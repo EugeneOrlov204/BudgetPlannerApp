@@ -38,7 +38,7 @@
     <dimen name="expense_screen_budget_moth_progress_bar_height">6dp</dimen>
     <dimen name="expense_screen_budget_moth_progress_bar_top_padding">14dp</dimen>
     <dimen name="expense_screen_budget_progress_top_space">24dp</dimen>
-    <dimen name="expense_screen_cash_transactions_column_vertical_padding">20dp</dimen>
+    <dimen name="expense_screen_cash_transactions_column_vertical_padding">25dp</dimen>
     <dimen name="expense_screen_divide_transaction_item_text_space">6dp</dimen>
     <dimen name="expense_screen_divider_thickness">1dp</dimen>
     <dimen name="expense_screen_expense_column_title_padding">24dp</dimen>
