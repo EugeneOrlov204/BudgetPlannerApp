@@ -24,8 +24,10 @@
     <string name="expense_screen_ING_account">ING account</string>
     <string name="expense_screen_brd_account">BRD account</string>
     <string name="expense_screen_cash_transactions_title">Cash</string>
-    <string name="expense_screen_header_text">Budget</string>
+    <string name="expense_screen_expense_column_title_text">Expenses</string>
+    <string name="expense_screen_header_text">My Spending</string>
     <string name="expense_screen_ing_transactions_title">ING</string>
+    <string name="expense_screen_month_budget">Budget for this month</string>
     <string name="expense_screen_to_transaction_screen_button_text">See all</string>
     <string name="expense_screen_total_balance">Total balance</string>
 
