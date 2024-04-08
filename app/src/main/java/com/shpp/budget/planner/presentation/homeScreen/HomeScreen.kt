@@ -39,9 +39,9 @@ import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
-    onLoggedOut: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(), onLoggedOut: () -> Unit,
     onPlusClick: () -> Unit,
+    onScreenClick: (screen: BottomBarScreen) -> Unit
 ) {
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     when (isLoggedIn) {
@@ -60,7 +60,8 @@ fun HomeScreen(
             budget = viewModel.budget.collectAsState().value,
             income = viewModel.income.collectAsState().value,
             expenses = viewModel.expenses.collectAsState().value,
-            onPlusClick = onPlusClick
+            onPlusClick = onPlusClick,
+            onScreenClick = onScreenClick
         )
 
         false -> LaunchedEffect(isLoggedIn) {
@@ -76,7 +77,8 @@ fun HomeScreenContent(
     budget: String,
     income: String,
     expenses: String,
-    onPlusClick: () -> Unit = {}
+    onPlusClick: () -> Unit = {},
+    onScreenClick: (screen: BottomBarScreen) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -96,7 +98,8 @@ fun HomeScreenContent(
         bottomBar = {
             BottomAppBar(
                 currentScreen = BottomBarScreen.HOME,
-                onPlusClick = onPlusClick
+                onPlusClick = onPlusClick,
+                onScreenClick = onScreenClick
             )
         }
     ) { innerPadding ->
@@ -277,7 +280,8 @@ fun HomeScreenContentPreview() {
                 month = "October",
                 budget = "$2,478",
                 income = "$1,800.00",
-                expenses = "$1,800.00"
+                expenses = "$1,800.00",
+                onScreenClick = {}
             )
         }
     }

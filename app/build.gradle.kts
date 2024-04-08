@@ -103,6 +103,7 @@ dependencies {
 
     //Polygons
     implementation("androidx.graphics:graphics-shapes:${Dependencies.shapesVersion}")
+
 }
 
 kapt {
