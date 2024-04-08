@@ -55,6 +55,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.components.BottomAppBar
@@ -70,6 +71,7 @@ fun AddScreen(
     val appContext = LocalContext.current.applicationContext
     val unknownErrorStr = stringResource(id = R.string.unknown_error)
     val transactionAddedStr = stringResource(id = R.string.transaction_added)
+    val emptyTransactionErrorStr= stringResource(id = R.string.empty_transaction_error)
     AddScreenContent(
         selectedDate = viewModel.selectedDate.collectAsState().value,
         selectedDateFormatted = viewModel.selectedDateString.collectAsState().value,
@@ -78,18 +80,28 @@ fun AddScreen(
         onCategoryClick = viewModel::selectCategory,
         onScreenClick = onScreenClick,
         onConfirmClick = { isExpense: Boolean, amount: String, fraction: String ->
-            viewModel.addTransaction(
-                isExpense = isExpense,
-                amount = amount,
-                fraction = fraction,
-                onSuccess = {
-                    Toast.makeText(appContext, transactionAddedStr, Toast.LENGTH_SHORT).show()
-                },
-                onFailure = {
-                    Toast.makeText(appContext, it.ifEmpty { unknownErrorStr }, Toast.LENGTH_SHORT)
-                        .show()
-                }
-            )
+
+            if (amount.toInt() == 0 && fraction.toInt() == 0) {
+                Toast.makeText(appContext, emptyTransactionErrorStr, Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.addTransaction(
+                    isExpense = isExpense,
+                    amount = amount,
+                    fraction = fraction,
+                    onSuccess = {
+
+                        Toast.makeText(appContext, transactionAddedStr, Toast.LENGTH_SHORT).show()
+                    },
+                    onFailure = {
+                        Toast.makeText(
+                            appContext,
+                            it.ifEmpty { unknownErrorStr },
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                )
+            }
         }
     )
 }
@@ -173,7 +185,7 @@ fun AddScreenContent(
             state = pagerState
         ) { index ->
             when (index) {
-                0 -> {
+                1 -> {
                     val amount = rememberSaveable { mutableStateOf("0") }
                     val fraction = rememberSaveable { mutableStateOf("00") }
                     LazyColumn(
@@ -198,7 +210,7 @@ fun AddScreenContent(
                     }
                 }
 
-                1 -> {
+                0 -> {
                     val amount = rememberSaveable { mutableStateOf("0") }
                     val fraction = rememberSaveable { mutableStateOf("00") }
                     LazyColumn(
@@ -334,7 +346,7 @@ private fun Categories(
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.add_screen_category_padding_bottom)))
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
-            maxItemsInEachRow = 4,
+            maxItemsInEachRow = 3,
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(id = R.dimen.add_screen_category_row_padding_vertical),
@@ -348,6 +360,7 @@ private fun Categories(
                             color = if (selectedCategory == it) it.color.copy(alpha = 0.5f) else Color.Transparent,
                             shape = CircleShape
                         )
+
                         .border(
                             width = dimensionResource(id = R.dimen.add_screen_category_icon_boarder_width),
                             shape = CircleShape,

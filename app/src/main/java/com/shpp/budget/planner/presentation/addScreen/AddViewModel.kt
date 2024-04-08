@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Calendar
+import java.util.Locale.Category
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,26 +53,27 @@ class AddViewModel @Inject constructor(private val addTransactionUseCase: AddTra
     ) {
         viewModelScope.launch {
             val amountWithFraction = (amount.toInt() + fraction.toInt() / 100f)
-            val c = Calendar.getInstance().apply {
+            val calendar = Calendar.getInstance().apply {
                 timeInMillis = selectedDate.value
             }
             if (isExpense) {
-                val category = _selectedCategory.value?.toCategory()
+                val category = _selectedCategory.value ?: TransactionCategory.OTHER
+
                 addTransactionUseCase(
                     Transaction.Expense(
-                        year = c.get(Calendar.YEAR),
-                        month = c.get(Calendar.MONTH),
-                        day = c.get(Calendar.DAY_OF_MONTH),
+                        year = calendar.get(Calendar.YEAR),
+                        month = calendar.get(Calendar.MONTH),
+                        day = calendar.get(Calendar.DAY_OF_MONTH),
                         amount = amountWithFraction,
-                        category = category?.code
+                        category = category.toCategory().code
                     )
                 )
             } else {
                 addTransactionUseCase(
                     Transaction.Income(
-                        year = c.get(Calendar.YEAR),
-                        month = c.get(Calendar.MONTH),
-                        day = c.get(Calendar.DAY_OF_MONTH),
+                        year = calendar.get(Calendar.YEAR),
+                        month = calendar.get(Calendar.MONTH),
+                        day = calendar.get(Calendar.DAY_OF_MONTH),
                         amount = amountWithFraction
                     )
                 )

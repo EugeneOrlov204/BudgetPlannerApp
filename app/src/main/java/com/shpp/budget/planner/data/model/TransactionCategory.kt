@@ -9,4 +9,5 @@ enum class TransactionCategory(val code: Int) {
     GIFT(5),
     HEALTH(6),
     HOME(7),
+    OTHER(8)
 }

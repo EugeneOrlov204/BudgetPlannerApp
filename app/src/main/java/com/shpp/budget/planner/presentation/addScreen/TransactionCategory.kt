@@ -1,6 +1,7 @@
 package com.shpp.budget.planner.presentation.addScreen
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.CarRepair
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.DryCleaning
@@ -21,4 +22,6 @@ enum class TransactionCategory(val color: Color, val icon: ImageVector) {
     GIFT(Color(0xFF0076E3), Icons.Filled.CardGiftcard),
     HEALTH(Color(0xFF1ABF97), Icons.Filled.Healing),
     HOME(Color(0xFFFF5843), Icons.Filled.Home),
+    OTHER(Color(0xFF5E5C5C),Icons.Filled.Apps)
+
 }
