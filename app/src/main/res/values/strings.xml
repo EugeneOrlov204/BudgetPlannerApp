@@ -46,4 +46,22 @@
     <string name="empty_field_validation_error">Cannot be blank</string>
     <string name="password_validation_error">Password must contain one digit, one lowercase and uppercase letter, one special character</string>
     <string name="password_validation_length_error">Password must be 8–16 characters long</string>
+
+    <!--Keyboard-->
+    <string name="keyboard_button_1">1</string>
+    <string name="keyboard_button_2">2</string>
+    <string name="keyboard_button_3">3</string>
+    <string name="keyboard_button_4">4</string>
+    <string name="keyboard_button_5">5</string>
+    <string name="keyboard_button_6">6</string>
+    <string name="keyboard_button_7">7</string>
+    <string name="keyboard_button_8">8</string>
+    <string name="keyboard_button_9">9</string>
+    <string name="keyboard_button_0">0</string>
+    <string name="keyboard_button_minus">-</string>
+    <string name="keyboard_button_plus">+</string>
+    <string name="keyboard_button_equals">=</string>
+    <string name="keyboard_button_x">x</string>
+    <string name="keyboard_button_done">DONE</string>
+
 </resources>

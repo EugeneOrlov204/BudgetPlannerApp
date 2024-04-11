@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.benchmark:benchmark-macro:1.2.3")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
@@ -101,8 +102,15 @@ dependencies {
 
     //Polygons
     implementation("androidx.graphics:graphics-shapes:${Dependencies.shapesVersion}")
+    // Сonstraintlayout
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
+    // To use constraintlayout in compose
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
 }
 
 kapt {
     correctErrorTypes = true
 }
+
+
+
