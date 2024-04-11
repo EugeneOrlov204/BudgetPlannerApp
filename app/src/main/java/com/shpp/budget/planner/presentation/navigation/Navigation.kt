@@ -2,13 +2,16 @@ package com.shpp.budget.planner.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.expenseScreen.ExpenseScreen
 import com.shpp.budget.planner.presentation.homeScreen.HomeScreen
+import com.shpp.budget.planner.presentation.resetPasswordScreen.ResetPasswordScreen
 import com.shpp.budget.planner.presentation.signInScreen.SignInScreen
 import com.shpp.budget.planner.presentation.signUpScreen.SignUpScreen
 
@@ -67,8 +70,30 @@ fun Navigation() {
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Auth.SignUp.route) {
                             navigate(Screen.Auth.SignUp.route)
                         }
+                    },
+                    onResetPasswordClick = {
+                        navController.performIfCurrentDestinationDoesntMatch(Screen.Auth.SignIn.ResetPassword.route) {
+                            if (it.isEmpty()) {
+                                navigate(route = Screen.Auth.SignIn.ResetPassword.route)
+                            } else {
+                                navigate(route = "${Screen.Auth.SignIn.ResetPassword.route}/$it")
+                            }
+                        }
                     }
                 )
+            }
+
+            composable(
+                "${Screen.Auth.SignIn.ResetPassword.route}/{email}",
+                arguments = listOf(navArgument("email") { type = NavType.StringType })
+            ) { navBackStackEntry ->
+                val email = navBackStackEntry.arguments?.getString("email").orEmpty()
+                ResetPasswordScreen(email)
+            }
+            composable(
+                Screen.Auth.SignIn.ResetPassword.route
+            ) {
+                ResetPasswordScreen()
             }
 
         }

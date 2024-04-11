@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -74,7 +73,8 @@ fun PreviewSignInScreen() {
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
     onLoggedIn: () -> Unit = {},
-    onSignUpClick: () -> Unit = {}
+    onSignUpClick: () -> Unit = {},
+    onResetPasswordClick: (String) -> Unit
 ) {
     val context = LocalContext.current
     var currentToast: Toast? by remember { mutableStateOf(null) }
@@ -103,6 +103,22 @@ fun SignInScreen(
         },
         onSignUpCLick = {
             onSignUpClick()
+        },
+        onResetPasswordClick = { email ->
+//            viewModel.resetPassword(
+//                email = email,
+//                onSuccess = {
+//                    currentToast?.cancel()
+//                    currentToast = Toast.makeText(context, R.string.sign_up_reset_password_success, Toast.LENGTH_SHORT)
+//                    currentToast?.show()
+//                },
+//                onFailure = {
+//                    currentToast?.cancel()
+//                    currentToast = Toast.makeText(context, it, Toast.LENGTH_SHORT)
+//                    currentToast?.show()
+//                }
+//            )
+            onResetPasswordClick(email)
         }
     )
 }
@@ -110,7 +126,8 @@ fun SignInScreen(
 @Composable
 fun SignInScreenContent(
     onLoggedIn: (String, String) -> Unit = { _, _ -> },
-    onSignUpCLick: () -> Unit = {}
+    onSignUpCLick: () -> Unit = {},
+    onResetPasswordClick: (String) -> Unit = {}
 ) {
     Column(
         Modifier
@@ -135,10 +152,14 @@ fun SignInScreenContent(
             Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(0.9f)
-                .weight(3f)
-        ) { email, password ->
-            onLoggedIn(email, password)
-        }
+                .weight(3f),
+            onLoggedIn = { email, password ->
+                onLoggedIn(email, password)
+            },
+            onResetPasswordClick = { email ->
+                onResetPasswordClick(email)
+            }
+        )
         SignInWithGoogle(
             Modifier
                 .fillMaxHeight()
@@ -170,14 +191,17 @@ fun Header(modifier: Modifier) {
 }
 
 @Composable
-fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
+fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit, onResetPasswordClick: (String) -> Unit) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var emailValidationState by rememberSaveable { mutableStateOf(EmailValidationResult.VALID) }
     var passwordValidationState by rememberSaveable { mutableStateOf(PasswordValidationResult.VALID) }
     val validator = AuthValidator()
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         OutlinedTextField(
             value = email, onValueChange = { email = it },
             label = { Text(text = stringResource(R.string.email)) },
@@ -259,8 +283,21 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit) {
                 color = MaterialTheme.colorScheme.background
             )
         }
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_fields)))
+        ClickableText(
+            text = buildAnnotatedString {
+                append(stringResource(id = R.string.sign_up_reset_password))
+            },
+            style = TextStyle(
+                color = MaterialTheme.colorScheme.onPrimary
+            ),
+            onClick = {
+                onResetPasswordClick(email)
+            }
+        )
     }
 }
+
 @Composable
 fun SignInWithGoogle(modifier: Modifier) {
     Column(
