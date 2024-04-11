@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.sp
 import com.shpp.budget.planner.R
 
@@ -35,7 +36,7 @@ fun Keyboard() {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-             horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             CreateFilledButton(text = stringResource(id = R.string.keyboard_button_1))
             CreateFilledButton(text = stringResource(id = R.string.keyboard_button_2))
@@ -49,7 +50,7 @@ fun Keyboard() {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-             horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             CreateFilledButton(text = stringResource(id = R.string.keyboard_button_4))
             CreateFilledButton(text = stringResource(id = R.string.keyboard_button_5))
@@ -77,13 +78,14 @@ fun Keyboard() {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-             horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             CreateTextButton(text = " ", textButtonNormalTextSize)
             CreateFilledButton(text = stringResource(id = R.string.keyboard_button_0))
             CreateTextButton(text = stringResource(id = R.string.keyboard_button_x), textButtonNormalTextSize)
             CreateTextButton(text = stringResource(id = R.string.keyboard_button_done), textButtonSmallTextSize )
         }
+        ColumnSpacer()
     }
 }
 
@@ -126,6 +128,7 @@ fun ColumnSpacer() {
 }
 
 @Preview(showSystemUi = true)
+@PreviewLightDark
 @Composable
 fun KeyboardPreview() {
     Keyboard()

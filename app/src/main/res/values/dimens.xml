@@ -75,11 +75,8 @@
     <dimen name="keyboard_filled_button_small_text_size">15sp</dimen>
     <dimen name="keyboard_text_button_normal_text_size">20</dimen>
     <dimen name="keyboard_text_button_small_text_size">15</dimen>
-    <dimen name="keyboard_filled_button_rounded_corner_shape_percents">20</dimen>
+    <dimen name="keyboard_filled_button_rounded_corner_shape_percents">5dp</dimen>
     <dimen name="keyboard_button_height">37dp</dimen>
     <dimen name="keyboard_button_width">90dp</dimen>
-
-    <dimen name="keyboard_back_arrow_size">45dp</dimen>
-    <dimen name="keyboard_symbols_size">38sp</dimen>
 
 </resources>
