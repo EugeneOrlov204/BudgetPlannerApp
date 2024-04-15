@@ -6,4 +6,6 @@ interface AuthRepository {
     val isLoggedIn: StateFlow<Boolean?>
     suspend fun registerUser(email: String, password: String): Result<Unit>
     suspend fun loginUser(email: String, password: String): Result<Unit>
+
+    suspend fun resetPassword(email: String): Result<Unit>
 }
