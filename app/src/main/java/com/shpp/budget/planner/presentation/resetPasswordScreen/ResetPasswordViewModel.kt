@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
     private val resetPasswordUseCase: ResetPasswordUseCase
-): ViewModel() {
+) : ViewModel() {
 
     fun resetPassword(
         email: String,

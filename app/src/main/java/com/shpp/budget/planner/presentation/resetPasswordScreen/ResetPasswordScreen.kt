@@ -59,7 +59,11 @@ fun ResetPasswordScreen(
                 email = it,
                 onSuccess = {
                     currentToast?.cancel()
-                    currentToast = Toast.makeText(context, R.string.sign_up_reset_password_success, Toast.LENGTH_SHORT)
+                    currentToast = Toast.makeText(
+                        context,
+                        R.string.sign_up_reset_password_success,
+                        Toast.LENGTH_SHORT
+                    )
                     currentToast?.show()
                 },
                 onFailure = {

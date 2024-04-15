@@ -88,39 +88,20 @@ fun SignInScreen(
     BackHandler {
         (context as ComponentActivity).moveTaskToBack(true)
     }
-    SignInScreenContent(
-        onLoggedIn = { email, password ->
-            viewModel.loginUser(
-                email = email,
-                password = password,
-                onSuccess = onLoggedIn,
-                onFailure = {
-                    currentToast?.cancel()
-                    currentToast = Toast.makeText(context, it, Toast.LENGTH_SHORT)
-                    currentToast?.show()
-                }
-            )
-        },
-        onSignUpCLick = {
-            onSignUpClick()
-        },
-        onResetPasswordClick = { email ->
-//            viewModel.resetPassword(
-//                email = email,
-//                onSuccess = {
-//                    currentToast?.cancel()
-//                    currentToast = Toast.makeText(context, R.string.sign_up_reset_password_success, Toast.LENGTH_SHORT)
-//                    currentToast?.show()
-//                },
-//                onFailure = {
-//                    currentToast?.cancel()
-//                    currentToast = Toast.makeText(context, it, Toast.LENGTH_SHORT)
-//                    currentToast?.show()
-//                }
-//            )
-            onResetPasswordClick(email)
-        }
-    )
+    SignInScreenContent(onLoggedIn = { email, password ->
+        viewModel.loginUser(email = email,
+            password = password,
+            onSuccess = onLoggedIn,
+            onFailure = {
+                currentToast?.cancel()
+                currentToast = Toast.makeText(context, it, Toast.LENGTH_SHORT)
+                currentToast?.show()
+            })
+    }, onSignUpCLick = {
+        onSignUpClick()
+    }, onResetPasswordClick = { email ->
+        onResetPasswordClick(email)
+    })
 }
 
 @Composable
@@ -135,8 +116,7 @@ fun SignInScreenContent(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.background
+                        MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.background
                     )
                 )
             ),
@@ -158,8 +138,7 @@ fun SignInScreenContent(
             },
             onResetPasswordClick = { email ->
                 onResetPasswordClick(email)
-            }
-        )
+            })
         SignInWithGoogle(
             Modifier
                 .fillMaxHeight()
@@ -169,8 +148,7 @@ fun SignInScreenContent(
         SignUp(
             Modifier
                 .fillMaxSize()
-                .weight(1f),
-            onSignUpCLick
+                .weight(1f), onSignUpCLick
         )
     }
 }
@@ -184,14 +162,15 @@ fun Header(modifier: Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.sign_in),
-            style = MaterialTheme.typography.titleLarge
+            text = stringResource(R.string.sign_in), style = MaterialTheme.typography.titleLarge
         )
     }
 }
 
 @Composable
-fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit, onResetPasswordClick: (String) -> Unit) {
+fun InputFields(
+    modifier: Modifier, onLoggedIn: (String, String) -> Unit, onResetPasswordClick: (String) -> Unit
+) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -199,14 +178,12 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit, onRese
     var passwordValidationState by rememberSaveable { mutableStateOf(PasswordValidationResult.VALID) }
     val validator = AuthValidator()
     Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
-            value = email, onValueChange = { email = it },
+        OutlinedTextField(value = email,
+            onValueChange = { email = it },
             label = { Text(text = stringResource(R.string.email)) },
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedLabelColor = MaterialTheme.colorScheme.background
             )
@@ -222,15 +199,13 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit, onRese
                     top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
                 )
         )
-        OutlinedTextField(
-            value = password,
+        OutlinedTextField(value = password,
             onValueChange = {
                 password = it
             },
             label = { Text(text = stringResource(R.string.password)) },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             trailingIcon = {
                 val iconImage = if (passwordVisible) Icons.Filled.Visibility
@@ -263,9 +238,7 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit, onRese
                 emailValidationState = validator.validateEmail(email)
                 passwordValidationState = validator.validatePassword(password)
 
-                if (emailValidationState == EmailValidationResult.VALID &&
-                    passwordValidationState == PasswordValidationResult.VALID
-                ) {
+                if (emailValidationState == EmailValidationResult.VALID && passwordValidationState == PasswordValidationResult.VALID) {
                     onLoggedIn(email, password)
                 }
             },
@@ -284,25 +257,20 @@ fun InputFields(modifier: Modifier, onLoggedIn: (String, String) -> Unit, onRese
             )
         }
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.sign_up_screen_padding_between_text_fields)))
-        ClickableText(
-            text = buildAnnotatedString {
-                append(stringResource(id = R.string.sign_up_reset_password))
-            },
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.onPrimary
-            ),
-            onClick = {
-                onResetPasswordClick(email)
-            }
-        )
+        ClickableText(text = buildAnnotatedString {
+            append(stringResource(id = R.string.sign_up_reset_password))
+        }, style = TextStyle(
+            color = MaterialTheme.colorScheme.onPrimary
+        ), onClick = {
+            onResetPasswordClick(email)
+        })
     }
 }
 
 @Composable
 fun SignInWithGoogle(modifier: Modifier) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier
     ) {
         Text(
             text = stringResource(R.string.sign_up_with_google_label),
@@ -312,8 +280,7 @@ fun SignInWithGoogle(modifier: Modifier) {
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.small_spacer)))
         Button(
             onClick = { },
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(dimensionResource(R.dimen.extra_small_corner_radius)),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.background
@@ -337,8 +304,7 @@ fun SignInWithGoogle(modifier: Modifier) {
 @Composable
 fun SignUp(modifier: Modifier, onSignUpClick: () -> Unit) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier
     ) {
         Text(
             text = stringResource(R.string.sign_up_button_label),
@@ -346,16 +312,13 @@ fun SignUp(modifier: Modifier, onSignUpClick: () -> Unit) {
             color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.small_spacer)))
-        ClickableText(
-            text = buildAnnotatedString {
-                append(stringResource(R.string.sign_up_button_text))
-            },
-            onClick = { onSignUpClick() },
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = dimensionResource(id = R.dimen.sign_up_screen_footer_button_text_size).value.sp
-            )
+        ClickableText(text = buildAnnotatedString {
+            append(stringResource(R.string.sign_up_button_text))
+        }, onClick = { onSignUpClick() }, style = TextStyle(
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = dimensionResource(id = R.dimen.sign_up_screen_footer_button_text_size).value.sp
+        )
         )
     }
 }
