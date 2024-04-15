@@ -7,28 +7,22 @@ import com.shpp.budget.planner.domain.useCases.transactions.AddTransactionUseCas
 import com.shpp.budget.planner.presentation.utils.ext.toCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.DateFormat
 import java.util.Calendar
-import java.util.Locale.Category
 import javax.inject.Inject
 
 @HiltViewModel
 class AddViewModel @Inject constructor(private val addTransactionUseCase: AddTransactionUseCase) :
     ViewModel() {
     private val _selectedCategory = MutableStateFlow<TransactionCategory?>(null)
-    val selectedCategory = _selectedCategory.asStateFlow()
-    private val localDateFormat = DateFormat.getDateInstance()
+    val selectedCategory: StateFlow<TransactionCategory?> = _selectedCategory
+
+
     private val _selectedDate = MutableStateFlow(System.currentTimeMillis())
-    val selectedDate = _selectedDate.asStateFlow()
-    val selectedDateString = _selectedDate.map {
-        localDateFormat.format(it)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, "")
+    val selectedDate: StateFlow<Long> = _selectedDate
+
 
     fun selectCategory(category: TransactionCategory) {
         viewModelScope.launch {
@@ -56,6 +50,7 @@ class AddViewModel @Inject constructor(private val addTransactionUseCase: AddTra
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = selectedDate.value
             }
+
             if (isExpense) {
                 val category = _selectedCategory.value ?: TransactionCategory.OTHER
 
@@ -65,7 +60,7 @@ class AddViewModel @Inject constructor(private val addTransactionUseCase: AddTra
                         month = calendar.get(Calendar.MONTH),
                         day = calendar.get(Calendar.DAY_OF_MONTH),
                         amount = amountWithFraction,
-                        category = category.toCategory().code
+                        category = category.toCategory().ordinal
                     )
                 )
             } else {

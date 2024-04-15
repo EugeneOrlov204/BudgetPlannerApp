@@ -10,6 +10,15 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+const val YEAR_FIELD_KEY = "year"
+const val MONTH_FIELD_KEY = "month"
+const val DAY_FIELD_KEY = "day"
+const val AMOUNT_FIELD_KEY = "amount"
+const val CATEGORY_FIELD_KEY = "category"
+const val TRANSACTION_COLLECTION_NAME = "transactions"
+const val EXPENSE_COLLECTION_NAME = "expense"
+const val INCOME_COLLECTION_NAME = "income"
+
 class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFirestore) :
     TransactionsRepository {
 
@@ -17,24 +26,24 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
         withContext(Dispatchers.IO) {
             callbackFlow<Result<Unit>> {
                 if (transaction is Transaction.Expense) {
-                    db.collection("transactions/$userUID/expense")
+                    db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$EXPENSE_COLLECTION_NAME")
                         .add(
                             hashMapOf(
-                                "year" to transaction.year,
-                                "month" to transaction.month,
-                                "day" to transaction.day,
-                                "amount" to transaction.amount,
-                                "category" to transaction.category
+                                YEAR_FIELD_KEY to transaction.year,
+                                MONTH_FIELD_KEY to transaction.month,
+                                DAY_FIELD_KEY to transaction.day,
+                                AMOUNT_FIELD_KEY to transaction.amount,
+                                CATEGORY_FIELD_KEY to transaction.category
                             )
                         )
                 } else {
-                    db.collection("transactions/$userUID/income")
+                    db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$INCOME_COLLECTION_NAME")
                         .add(
                             hashMapOf(
-                                "year" to transaction.year,
-                                "month" to transaction.month,
-                                "day" to transaction.day,
-                                "amount" to transaction.amount
+                                YEAR_FIELD_KEY to transaction.year,
+                                MONTH_FIELD_KEY to transaction.month,
+                                DAY_FIELD_KEY to transaction.day,
+                                AMOUNT_FIELD_KEY to transaction.amount
                             )
                         )
                 }.addOnSuccessListener {

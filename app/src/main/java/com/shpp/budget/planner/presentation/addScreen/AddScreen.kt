@@ -55,13 +55,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import kotlinx.coroutines.launch
+import java.text.DateFormat
 
 @Composable
 fun AddScreen(
@@ -71,10 +71,10 @@ fun AddScreen(
     val appContext = LocalContext.current.applicationContext
     val unknownErrorStr = stringResource(id = R.string.unknown_error)
     val transactionAddedStr = stringResource(id = R.string.transaction_added)
-    val emptyTransactionErrorStr= stringResource(id = R.string.empty_transaction_error)
+    val emptyTransactionErrorStr = stringResource(id = R.string.empty_transaction_error)
     AddScreenContent(
         selectedDate = viewModel.selectedDate.collectAsState().value,
-        selectedDateFormatted = viewModel.selectedDateString.collectAsState().value,
+        selectedDateFormatted = DateFormat.getDateInstance().format(viewModel.selectedDate.value),
         onSelectDate = viewModel::updateDate,
         selectedCategory = viewModel.selectedCategory.collectAsState().value,
         onCategoryClick = viewModel::selectCategory,
@@ -185,7 +185,7 @@ fun AddScreenContent(
             state = pagerState
         ) { index ->
             when (index) {
-                1 -> {
+                0 -> {
                     val amount = rememberSaveable { mutableStateOf("0") }
                     val fraction = rememberSaveable { mutableStateOf("00") }
                     LazyColumn(
@@ -210,7 +210,7 @@ fun AddScreenContent(
                     }
                 }
 
-                0 -> {
+                1 -> {
                     val amount = rememberSaveable { mutableStateOf("0") }
                     val fraction = rememberSaveable { mutableStateOf("00") }
                     LazyColumn(
