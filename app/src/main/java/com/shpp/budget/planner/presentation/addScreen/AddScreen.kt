@@ -72,9 +72,11 @@ fun AddScreen(
     val unknownErrorStr = stringResource(id = R.string.unknown_error)
     val transactionAddedStr = stringResource(id = R.string.transaction_added)
     val emptyTransactionErrorStr = stringResource(id = R.string.empty_transaction_error)
+
     AddScreenContent(
         selectedDate = viewModel.selectedDate.collectAsState().value,
-        selectedDateFormatted = DateFormat.getDateInstance().format(viewModel.selectedDate.value),
+        selectedDateFormatted = DateFormat.getDateInstance()
+            .format(viewModel.selectedDate.collectAsState().value),
         onSelectDate = viewModel::updateDate,
         selectedCategory = viewModel.selectedCategory.collectAsState().value,
         onCategoryClick = viewModel::selectCategory,
