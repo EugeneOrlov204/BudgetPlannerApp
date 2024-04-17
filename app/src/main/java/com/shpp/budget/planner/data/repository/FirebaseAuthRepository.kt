@@ -20,12 +20,14 @@ class FirebaseAuthRepository @Inject constructor(
     private val auth: FirebaseAuth
 ) : AuthRepository {
     override val isLoggedIn = MutableStateFlow<Boolean?>(null)
+    override val userUID = MutableStateFlow<String?>(null)
 
     init {
         auth.addAuthStateListener { firebaseAuth ->
             isLoggedIn.update {
                 firebaseAuth.currentUser != null
             }
+            userUID.update { firebaseAuth.currentUser?.uid }
         }
     }
 

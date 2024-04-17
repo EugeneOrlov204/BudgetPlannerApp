@@ -47,7 +47,7 @@ import com.shpp.budget.planner.presentation.utils.ext.toPath
  */
 @Composable
 fun BottomAppBar(
-    currentScreen: BottomBarScreen,
+    currentScreen: BottomBarScreen? = null,
     plusButtonColor: Color = MaterialTheme.colorScheme.secondary,
     plusIconColor: Color = MaterialTheme.colorScheme.onSecondary,
     plusPadding: Dp = dimensionResource(R.dimen.bottom_app_bar_central_button_padding),

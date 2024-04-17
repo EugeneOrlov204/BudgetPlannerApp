@@ -79,4 +79,14 @@
     <dimen name="home_screen_saving_goals_element_padding_vertical">20dp</dimen>
     <dimen name="home_screen_small_text_padding">2dp</dimen>
     <dimen name="top_app_bar_padding_vertical">32dp</dimen>
+
+    <!--Add screen-->
+    <dimen name="add_screen_calendar_icon_padding">10dp</dimen>
+    <dimen name="add_screen_category_icon_boarder_width">2dp</dimen>
+    <dimen name="add_screen_category_icon_padding">10dp</dimen>
+    <dimen name="add_screen_category_padding_bottom">12dp</dimen>
+    <dimen name="add_screen_category_row_padding_vertical">23dp</dimen>
+    <dimen name="add_screen_confirm_button_padding_vertical">20dp</dimen>
+    <dimen name="add_screen_content_padding_horizontal">50dp</dimen>
+    <dimen name="add_screen_input_padding_vertical">25dp</dimen>
 </resources>

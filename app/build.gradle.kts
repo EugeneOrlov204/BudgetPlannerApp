@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("com.google.firebase:firebase-firestore-ktx:${Dependencies.firestore}")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
@@ -95,6 +96,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     // Firebase Auth
     implementation("com.google.firebase:firebase-auth:${Dependencies.firebaseAuth}")
+    implementation("com.google.firebase:firebase-firestore")
 
     // Material Icons extended
     implementation("androidx.compose.material:material-icons-extended:${Dependencies.materialIconsExtended}")

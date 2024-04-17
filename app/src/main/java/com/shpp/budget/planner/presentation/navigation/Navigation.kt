@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.shpp.budget.planner.presentation.addScreen.AddScreen
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.expenseScreen.ExpenseScreen
 import com.shpp.budget.planner.presentation.homeScreen.HomeScreen
@@ -19,6 +20,11 @@ fun Navigation() {
         composable(Screen.Home.route) {
             HomeScreen(
                 onLoggedOut = { navController.navigate(Screen.Auth.route) },
+                onPlusClick = {
+                    navController.performIfCurrentDestinationDoesntMatch(Screen.Add.route) {
+                        navController.navigate(Screen.Add.route)
+                    }
+                },
                 onScreenClick = {
                     when (it) {
                         BottomBarScreen.WALLET -> {
@@ -29,11 +35,16 @@ fun Navigation() {
 
                         else -> {}
                     }
-                }
-            )
+
+                })
+
         }
         composable(Screen.Expense.route) {
-            ExpenseScreen(onScreenClick = {
+            ExpenseScreen(onPlusClick = {
+                navController.performIfCurrentDestinationDoesntMatch(Screen.Add.route) {
+                    navController.navigate(Screen.Add.route)
+                }
+            }, onScreenClick = {
                 when (it) {
                     BottomBarScreen.HOME ->
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Home.route) {
@@ -44,13 +55,28 @@ fun Navigation() {
                 }
             })
         }
+        composable(Screen.Add.route) {
+            AddScreen(onScreenClick = {
+                when (it) {
+                    BottomBarScreen.HOME ->
+                        navController.performIfCurrentDestinationDoesntMatch(Screen.Home.route) {
+                            navController.navigateUp()
+                        }
 
+                    BottomBarScreen.WALLET -> {
+                        navController.performIfCurrentDestinationDoesntMatch(Screen.Expense.route) {
+                            navController.navigate(Screen.Expense.route)
+                        }
+                    }
+
+                    else -> {}
+                }
+            })
+        }
         navigation(route = Screen.Auth.route, startDestination = Screen.Auth.SignIn.route) {
             composable(Screen.Auth.SignUp.route) {
                 SignUpScreen(
-                    onLoggedIn = {
-                        navController.popBackStack(Screen.Auth.route, true)
-                    },
+                    onLoggedIn = { Screen.Auth.finish(navController) },
                     onSignInButtonClick = {
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Auth.SignIn.route) {
                             navigateUp()
@@ -60,9 +86,7 @@ fun Navigation() {
             }
             composable(Screen.Auth.SignIn.route) {
                 SignInScreen(
-                    onLoggedIn = {
-                        navController.navigateUp()
-                    },
+                    onLoggedIn = { Screen.Auth.finish(navController) },
                     onSignUpClick = {
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Auth.SignUp.route) {
                             navigate(Screen.Auth.SignUp.route)

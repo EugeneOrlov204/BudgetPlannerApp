@@ -59,6 +59,7 @@ import com.shpp.budget.planner.R
 import com.shpp.budget.planner.domain.model.Transaction
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
+import com.shpp.budget.planner.presentation.navigation.Screen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.ext.toReducedNumberFormat
 import java.time.Month
@@ -69,18 +70,21 @@ import java.time.Month
 @Composable
 fun Preview() {
     BudgetPlannerAppTheme {
-        ExpenseScreen {}
+        ExpenseScreen({}) {
+
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit) {
+fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit, onPlusClick: () -> Unit) {
     Scaffold(
         bottomBar = {
             BottomAppBar(
                 currentScreen = BottomBarScreen.WALLET,
-                onScreenClick = onScreenClick
+                onScreenClick = onScreenClick,
+                onPlusClick = onPlusClick
             )
         }
     ) {
