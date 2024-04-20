@@ -4,4 +4,5 @@ import com.shpp.budget.planner.data.model.Transaction
 
 interface TransactionsRepository {
     suspend fun addTransaction(userUID: String, transaction: Transaction): Result<Unit>
+    suspend fun getExpenses(userUID: String): Result<List<Transaction.Expense>>
 }

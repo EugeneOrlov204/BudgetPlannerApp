@@ -1,5 +1,6 @@
 package com.shpp.budget.planner.data.repository
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shpp.budget.planner.data.model.Transaction
 import com.shpp.budget.planner.domain.repository.TransactionsRepository
@@ -18,6 +19,8 @@ const val CATEGORY_FIELD_KEY = "category"
 const val TRANSACTION_COLLECTION_NAME = "transactions"
 const val EXPENSE_COLLECTION_NAME = "expense"
 const val INCOME_COLLECTION_NAME = "income"
+
+const val LOG_TAG = "LOG_TAG"
 
 class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFirestore) :
     TransactionsRepository {
@@ -54,4 +57,33 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
                 awaitClose()
             }.first()
         }
+
+    override suspend fun getExpenses(userUID: String): Result<List<Transaction.Expense>> =
+        withContext(Dispatchers.IO) {
+            callbackFlow<Result<List<Transaction.Expense>>> {
+                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$EXPENSE_COLLECTION_NAME")
+                    .get()
+                    .addOnSuccessListener {
+                        val expenses = mutableListOf<Transaction.Expense>()
+                        it.documents.forEach {
+                            val transaction =
+                                it.toObject(Transaction.Expense::class.java) ?: Transaction.Expense(
+                                    0,
+                                    0,
+                                    0,
+                                    0.0f,
+                                    0
+                                )
+                            expenses += transaction
+                            Log.d(LOG_TAG, transaction.toString())
+                            trySend(Result.success(expenses))
+                        }
+                    }
+                    .addOnFailureListener {
+                        Result.failure<List<Transaction>>(it)
+                    }
+                awaitClose()
+            }.first()
+        }
+
 }

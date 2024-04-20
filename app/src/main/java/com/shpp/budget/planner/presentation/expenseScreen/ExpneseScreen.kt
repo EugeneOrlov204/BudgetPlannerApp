@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -55,13 +56,15 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
-import com.shpp.budget.planner.domain.model.Transaction
+import com.shpp.budget.planner.data.model.Transaction
+//import com.shpp.budget.planner.domain.model.Transaction
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
-import com.shpp.budget.planner.presentation.navigation.Screen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.ext.toReducedNumberFormat
+import kotlinx.coroutines.flow.asStateFlow
 import java.time.Month
 
 
@@ -70,15 +73,15 @@ import java.time.Month
 @Composable
 fun Preview() {
     BudgetPlannerAppTheme {
-        ExpenseScreen({}) {
-
-        }
+        ExpenseScreen()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit, onPlusClick: () -> Unit) {
+fun ExpenseScreen(viewModel: ExpenseViewModel = hiltViewModel(), onScreenClick: (screen: BottomBarScreen) -> Unit = {}, onPlusClick: () -> Unit = {}) {
+    val expenses = viewModel.expenses.collectAsState().value
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -100,16 +103,9 @@ fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit, onPlusClick:
             ),
             sheetContent = {
                 TransactionsColumn(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth(),
-                    //Todo get list from viewModel
-                    List(12) {
-                        Transaction(
-                            typeName = "car",
-                            date = "11 March 2024",
-                            transactionAmount = 500f
-                        )
-                    },
+                    transactionItems = expenses
                 )
             },
             sheetPeekHeight = (LocalConfiguration.current.screenHeightDp * 0.42).dp
@@ -490,7 +486,7 @@ fun BudgetProgress(totalBudget: Int, currentBudget: Int) {
 @Composable
 fun TransactionsColumn(
     modifier: Modifier,
-    transactionItems: List<Transaction>,
+    transactionItems: List<Transaction.Expense>,
     onClick: () -> Unit = {}
 ) {
     Column(
@@ -507,14 +503,14 @@ fun TransactionsColumn(
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
         )
         for (t in transactionItems) {
-            TransactionItem(t.typeName, t.date, t.transactionAmount)
+            TransactionItem(t.)
         }
 
     }
 }
 
 @Composable
-fun TransactionItem(transactionType: String, transactionDate: String, transactionAmount: Float) {
+fun TransactionItem(type: Int, name: String, date: String, amount: Float) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -547,19 +543,19 @@ fun TransactionItem(transactionType: String, transactionDate: String, transactio
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = transactionType,
+                text = name,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
             )
             Spacer(
                 modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_divide_transaction_item_text_space))
             )
             Text(
-                text = transactionDate,
+                text = date,
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Normal)
             )
         }
         Text(
-            text = transactionAmount.toString(),
+            text = amount.toString(),
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
         )
         Spacer(modifier = Modifier.weight(0.1f))
