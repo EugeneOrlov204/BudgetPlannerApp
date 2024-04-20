@@ -1,10 +1,11 @@
 package com.shpp.budget.planner.presentation.expenseScreen
 
+//import com.shpp.budget.planner.domain.model.Transaction
 import android.graphics.Paint
 import android.graphics.PointF
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +20,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -45,10 +49,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -58,13 +62,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
-import com.shpp.budget.planner.data.model.Transaction
-//import com.shpp.budget.planner.domain.model.Transaction
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.ext.toReducedNumberFormat
-import kotlinx.coroutines.flow.asStateFlow
 import java.time.Month
 
 
@@ -79,7 +80,11 @@ fun Preview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpenseScreen(viewModel: ExpenseViewModel = hiltViewModel(), onScreenClick: (screen: BottomBarScreen) -> Unit = {}, onPlusClick: () -> Unit = {}) {
+fun ExpenseScreen(
+    viewModel: ExpenseViewModel = hiltViewModel(),
+    onScreenClick: (screen: BottomBarScreen) -> Unit = {},
+    onPlusClick: () -> Unit = {}
+) {
     val expenses = viewModel.expenses.collectAsState().value
 
     Scaffold(
@@ -107,6 +112,7 @@ fun ExpenseScreen(viewModel: ExpenseViewModel = hiltViewModel(), onScreenClick: 
                         .fillMaxWidth(),
                     transactionItems = expenses
                 )
+                Spacer(modifier = Modifier.height(100.dp))
             },
             sheetPeekHeight = (LocalConfiguration.current.screenHeightDp * 0.42).dp
         ) {
@@ -486,7 +492,7 @@ fun BudgetProgress(totalBudget: Int, currentBudget: Int) {
 @Composable
 fun TransactionsColumn(
     modifier: Modifier,
-    transactionItems: List<Transaction.Expense>,
+    transactionItems: List<ExpenseItem>,
     onClick: () -> Unit = {}
 ) {
     Column(
@@ -503,14 +509,20 @@ fun TransactionsColumn(
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
         )
         for (t in transactionItems) {
-            TransactionItem(t.)
+            TransactionItem(
+                icon = t.type,
+                name = t.name,
+                date = t.date,
+                amount = t.amount,
+                color = t.color
+            )
         }
 
     }
 }
 
 @Composable
-fun TransactionItem(type: Int, name: String, date: String, amount: Float) {
+fun TransactionItem(icon: ImageVector, name: Int, date: String, amount: Float, color: Color) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -526,39 +538,53 @@ fun TransactionItem(type: Int, name: String, date: String, amount: Float) {
             )
     ) {
 
-        Image(
-            painter = painterResource(R.drawable.car_ic),
-            contentDescription = null,
-            modifier = Modifier.padding(
-                start = dimensionResource(R.dimen.expense_screen_transaction_icon_padding),
-                top = dimensionResource(R.dimen.expense_screen_transaction_icon_padding),
-                bottom = dimensionResource(id = R.dimen.expense_screen_transaction_icon_padding)
-            )
-        )
-        Spacer(
-            modifier =
-            Modifier.width(dimensionResource(R.dimen.expense_screen_space_between_transaction_image_and_text))
-        )
-        Column(
-            modifier = Modifier.weight(1f)
+        Row(
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.expense_screen_transaction_icon_padding))
         ) {
-            Text(
-                text = name,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+            Icon(
+                modifier = Modifier
+                    .background(
+                        color = Color.Transparent,
+                        shape = CircleShape
+                    )
+
+                    .border(
+                        width = dimensionResource(id = R.dimen.add_screen_category_icon_boarder_width),
+                        shape = CircleShape,
+                        color = color
+                    )
+                    .clip(CircleShape)
+                    .padding(dimensionResource(id = R.dimen.add_screen_category_icon_padding)),
+                imageVector = icon,
+                contentDescription = stringResource(id = name),
+                tint = color
             )
             Spacer(
-                modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_divide_transaction_item_text_space))
+                modifier =
+                Modifier.width(dimensionResource(R.dimen.expense_screen_space_between_transaction_image_and_text))
             )
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stringResource(id = name),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+                )
+                Spacer(
+                    modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_divide_transaction_item_text_space))
+                )
+                Text(
+                    text = date,
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Normal)
+                )
+            }
             Text(
-                text = date,
-                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Normal)
+                text = amount.toString(),
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
             )
+            Spacer(modifier = Modifier.weight(0.1f))
         }
-        Text(
-            text = amount.toString(),
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
-        )
-        Spacer(modifier = Modifier.weight(0.1f))
     }
 }
 

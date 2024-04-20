@@ -2,6 +2,7 @@ package com.shpp.budget.planner.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
 import com.shpp.budget.planner.data.model.Transaction
 import com.shpp.budget.planner.domain.repository.TransactionsRepository
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +81,8 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
                         }
                     }
                     .addOnFailureListener {
-                        Result.failure<List<Transaction>>(it)
+
+                        trySend(Result.failure(it))
                     }
                 awaitClose()
             }.first()
