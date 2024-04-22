@@ -2,6 +2,8 @@ package com.shpp.budget.planner.presentation.resetPasswordScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
@@ -45,7 +49,6 @@ fun ResetPasswordScreen(
     ResetPasswordScreenContent(
         email = email,
         modifier = Modifier
-            .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
@@ -85,68 +88,44 @@ fun ResetPasswordScreenContent(
     var emailValue by remember { mutableStateOf(email) }
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
     ) {
-        Column(
+        Text(
+            text = stringResource(id = R.string.reset_password_header),
+            style = MaterialTheme.typography.titleLarge
+        )
+        OutlinedTextField(
+            value = emailValue,
+            onValueChange = {
+                emailValue = it
+            },
+            label = { Text(text = stringResource(R.string.email)) },
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.background
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
             modifier = Modifier
-                .weight(1f)
-        ) {}
-        Column(
+                .fillMaxWidth(0.85f)
+        )
+        Button(
+            onClick = {
+                onResetPasswordClick(emailValue)
+            },
+            shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
             modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth(0.85f)
+                .height(dimensionResource(R.dimen.sign_in_button_height)),
+            colors = ButtonDefaults.buttonColors(
+                MaterialTheme.colorScheme.primary
+            )
         ) {
             Text(
-                text = stringResource(id = R.string.reset_password_header),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.9f)
-                .weight(1f)
-        ) {
-            OutlinedTextField(
-                value = emailValue,
-                onValueChange = {
-                    emailValue = it
-                },
-                label = { Text(text = stringResource(R.string.email)) },
-                colors = TextFieldDefaults.colors(
-                    focusedLabelColor = MaterialTheme.colorScheme.background
-                ),
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.9f)
-                .weight(1f)
-        ) {
-            Button(
-                onClick = {
-                    onResetPasswordClick(emailValue)
-                },
-                shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimensionResource(R.dimen.sign_in_button_height)),
-                colors = ButtonDefaults.buttonColors(
-                    MaterialTheme.colorScheme.primary
+                text = stringResource(id = R.string.reset_password_button),
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.background
                 )
-            ) {
-                Text(
-                    text = stringResource(id = R.string.reset_password_button),
-                    style = TextStyle(
-                        color = MaterialTheme.colorScheme.background
-                    )
-                )
-            }
+            )
         }
 
     }

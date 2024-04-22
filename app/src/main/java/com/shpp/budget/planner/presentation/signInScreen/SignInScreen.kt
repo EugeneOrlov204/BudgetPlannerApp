@@ -174,9 +174,6 @@ fun InputFields(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    var emailValidationState by rememberSaveable { mutableStateOf(EmailValidationResult.VALID) }
-    var passwordValidationState by rememberSaveable { mutableStateOf(PasswordValidationResult.VALID) }
-    val validator = AuthValidator()
     Column(
         modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -189,16 +186,7 @@ fun InputFields(
             )
         )
 
-        Text(
-            text = getEmailValidationMessage(emailValidationState),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
-                )
-        )
+        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
         OutlinedTextField(value = password,
             onValueChange = {
                 password = it
@@ -221,26 +209,11 @@ fun InputFields(
                 focusedLabelColor = MaterialTheme.colorScheme.background
             )
         )
-        Text(
-            text = getPasswordValidationMessage(passwordValidationState),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = dimensionResource(R.dimen.sign_in_validation_message_top_padding)
-                )
 
-        )
         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         Button(
             onClick = {
-                emailValidationState = validator.validateEmail(email)
-                passwordValidationState = validator.validatePassword(password)
-
-                if (emailValidationState == EmailValidationResult.VALID && passwordValidationState == PasswordValidationResult.VALID) {
-                    onLoggedIn(email, password)
-                }
+                onLoggedIn(email, password)
             },
             shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_radius)),
             modifier = Modifier
