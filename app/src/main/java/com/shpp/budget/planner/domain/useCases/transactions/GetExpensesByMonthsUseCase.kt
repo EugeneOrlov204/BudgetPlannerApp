@@ -4,14 +4,14 @@ import com.shpp.budget.planner.domain.repository.AuthRepository
 import com.shpp.budget.planner.domain.repository.TransactionsRepository
 import javax.inject.Inject
 
-class GetTransactionsUseCase @Inject constructor(
-    private val transactionsRepository: TransactionsRepository,
+class GetExpensesByMonthsUseCase @Inject constructor(
+    private val repository: TransactionsRepository,
     private val authRepository: AuthRepository
 ) {
 
     suspend operator fun invoke() =
         authRepository.userUID.value?.let {
-            transactionsRepository.getExpenses(it)
+            repository.getExpenseByMonths(it)
         }
 
 }

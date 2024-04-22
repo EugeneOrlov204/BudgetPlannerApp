@@ -1,6 +1,5 @@
 package com.shpp.budget.planner.presentation.expenseScreen
 
-//import com.shpp.budget.planner.domain.model.Transaction
 import android.graphics.Paint
 import android.graphics.PointF
 import androidx.compose.foundation.Canvas
@@ -62,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
+import com.shpp.budget.planner.domain.model.ExpenseItem
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
@@ -85,6 +85,8 @@ fun ExpenseScreen(
     onScreenClick: (screen: BottomBarScreen) -> Unit = {},
     onPlusClick: () -> Unit = {}
 ) {
+    val expensesByMonths = viewModel.expensesByMonths.collectAsState().value
+    val budget = viewModel.budget.collectAsState().value
     val expenses = viewModel.expenses.collectAsState().value
 
     Scaffold(
@@ -116,16 +118,18 @@ fun ExpenseScreen(
             },
             sheetPeekHeight = (LocalConfiguration.current.screenHeightDp * 0.42).dp
         ) {
-            ExpenseScreenContent()
+            ExpenseScreenContent(budget, expensesByMonths)
         }
     }
 
 
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
-fun ExpenseScreenContent() {
+fun ExpenseScreenContent(
+    totalBudget: Double = 0.0,
+    expensesByMonths: List<Float> = emptyList()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -142,23 +146,10 @@ fun ExpenseScreenContent() {
                 .fillMaxWidth()
                 .fillMaxHeight(0.4f),
             Month.entries.map { it.toString().take(3) },
-            points = listOf(
-                1000f,
-                204f,
-                4556f,
-                7000f,
-                945f,
-                33f,
-                4200f,
-                9233f,
-                1123f,
-                735f,
-                8004f,
-                260f
-            ),
+            points = expensesByMonths,
             paddingSpace = 20.dp,
         )
-        BudgetProgress(totalBudget = 1000, currentBudget = 650)
+        BudgetProgress(totalBudget = totalBudget, currentBudget = 650)
 
     }
 }
@@ -315,7 +306,9 @@ fun Graph(
             /**drawing curve */
             val stroke = Path().apply {
                 reset()
-                moveTo(coordinates.first().x, coordinates.first().y)
+                if (coordinates.isNotEmpty()) {
+                    moveTo(coordinates.first().x, coordinates.first().y)
+                }
                 for (i in 0 until coordinates.size - 1) {
                     cubicTo(
                         controlPoints1[i].x, controlPoints1[i].y,
@@ -431,7 +424,11 @@ fun Graph(
  * returns the value for the y-scale in the graph
  */
 fun getYValues(points: List<Float>): MutableList<Int> {
-    val max = points.max().toInt()
+    var max = 100
+    if (points.isNotEmpty()) {
+        max = points.max().toInt()
+    }
+
     var multiplier = 1
     repeat(max.toString().length - 1) { multiplier *= 10 }
     val yValues: MutableList<Int> = mutableListOf()
@@ -442,7 +439,7 @@ fun getYValues(points: List<Float>): MutableList<Int> {
 }
 
 @Composable
-fun BudgetProgress(totalBudget: Int, currentBudget: Int) {
+fun BudgetProgress(totalBudget: Double, currentBudget: Int) {
 
     Column(
         modifier = Modifier

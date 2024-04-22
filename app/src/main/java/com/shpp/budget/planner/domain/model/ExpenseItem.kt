@@ -1,8 +1,9 @@
-package com.shpp.budget.planner.presentation.expenseScreen
+package com.shpp.budget.planner.domain.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.shpp.budget.planner.data.model.Transaction
+import com.shpp.budget.planner.presentation.expenseScreen.ExpenseCategory
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

@@ -2,7 +2,6 @@ package com.shpp.budget.planner.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Source
 import com.shpp.budget.planner.data.model.Transaction
 import com.shpp.budget.planner.domain.repository.TransactionsRepository
 import kotlinx.coroutines.Dispatchers
@@ -66,15 +65,16 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
                     .get()
                     .addOnSuccessListener {
                         val expenses = mutableListOf<Transaction.Expense>()
-                        it.documents.forEach {
+                        it.documents.forEach { doc ->
                             val transaction =
-                                it.toObject(Transaction.Expense::class.java) ?: Transaction.Expense(
-                                    0,
-                                    0,
-                                    0,
-                                    0.0f,
-                                    0
-                                )
+                                doc.toObject(Transaction.Expense::class.java)
+                                    ?: Transaction.Expense(
+                                        0,
+                                        0,
+                                        0,
+                                        0.0f,
+                                        0
+                                    )
                             expenses += transaction
                             Log.d(LOG_TAG, transaction.toString())
                             trySend(Result.success(expenses))
@@ -87,5 +87,64 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
                 awaitClose()
             }.first()
         }
+
+    override suspend fun getIncomeSum(userUID: String): Result<Double> =
+        withContext(Dispatchers.IO) {
+            callbackFlow<Result<Double>> {
+                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$INCOME_COLLECTION_NAME")
+                    .get()
+                    .addOnSuccessListener {
+                        var result = 0.0
+                        it.documents.forEach { doc ->
+                            result += doc[AMOUNT_FIELD_KEY] as Double
+                        }
+                        trySend(Result.success(result))
+                    }
+                    .addOnFailureListener {
+                        trySend(Result.failure(it))
+                    }
+                awaitClose()
+            }.first()
+        }
+
+    override suspend fun getExpenseSum(userUID: String): Result<Double> =
+        withContext(Dispatchers.IO) {
+            callbackFlow<Result<Double>> {
+                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$EXPENSE_COLLECTION_NAME")
+                    .get()
+                    .addOnSuccessListener {
+                        var result = 0.0
+                        it.documents.forEach { doc ->
+                            result += (doc[AMOUNT_FIELD_KEY] as Double)
+                        }
+                        trySend(Result.success(result))
+                    }
+                    .addOnFailureListener {
+                        trySend(Result.failure(it))
+                    }
+                awaitClose()
+            }.first()
+        }
+
+    override suspend fun getExpenseByMonths(userUID: String): Result<List<Float>> {
+        val expensesList = getExpenses(userUID)
+        return withContext(Dispatchers.IO) {
+            callbackFlow<Result<List<Float>>> {
+                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$EXPENSE_COLLECTION_NAME")
+                    .get()
+                    .addOnSuccessListener {
+                        val result = MutableList(12) { 0.0f }
+                        expensesList.getOrNull()?.forEach {
+                            result[it.month] = it.amount
+                        }
+                        trySend(Result.success(result))
+                    }
+                    .addOnFailureListener {
+                        trySend(Result.failure(it))
+                    }
+                awaitClose()
+            }.first()
+        }
+    }
 
 }
