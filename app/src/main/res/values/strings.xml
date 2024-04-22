@@ -62,6 +62,6 @@
     <string name="keyboard_button_plus">+</string>
     <string name="keyboard_button_equals">=</string>
     <string name="keyboard_button_x">x</string>
-    <string name="keyboard_button_done">DONE</string>
+    <string name="keyboard_button_done">Done</string>
 
 </resources>
