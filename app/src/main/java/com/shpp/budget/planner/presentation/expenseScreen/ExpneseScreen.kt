@@ -61,7 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
-import com.shpp.budget.planner.domain.model.ExpenseItem
+import com.shpp.budget.planner.domain.model.TransactionItem
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
@@ -87,7 +87,7 @@ fun ExpenseScreen(
 ) {
     val expensesByMonths = viewModel.expensesByMonths.collectAsState().value
     val budget = viewModel.budget.collectAsState().value
-    val expenses = viewModel.expenses.collectAsState().value
+    val transactions = viewModel.transactions.collectAsState().value
 
     Scaffold(
         bottomBar = {
@@ -112,7 +112,7 @@ fun ExpenseScreen(
                 TransactionsColumn(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    transactionItems = expenses
+                    transactionItems = transactions
                 )
                 Spacer(modifier = Modifier.height(100.dp))
             },
@@ -489,7 +489,7 @@ fun BudgetProgress(totalBudget: Double, currentBudget: Int) {
 @Composable
 fun TransactionsColumn(
     modifier: Modifier,
-    transactionItems: List<ExpenseItem>,
+    transactionItems: List<TransactionItem>,
     onClick: () -> Unit = {}
 ) {
     Column(

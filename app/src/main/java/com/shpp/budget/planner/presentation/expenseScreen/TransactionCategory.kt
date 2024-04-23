@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.shpp.budget.planner.R
 
-enum class ExpenseCategory(
+enum class TransactionCategory(
     val color: Color,
     val icon: ImageVector,
     val type: Int
@@ -27,5 +27,6 @@ enum class ExpenseCategory(
     GIFT(Color(0xFF0076E3), Icons.Filled.CardGiftcard, R.string.expense_screen_gift),
     HEALTH(Color(0xFF1ABF97), Icons.Filled.Healing, R.string.expense_screen_health),
     HOME(Color(0xFFFF5843), Icons.Filled.Home, R.string.expense_screen_home),
-    OTHER(Color(0xFF5E5C5C), Icons.Filled.Apps, R.string.expense_screen_other)
+    OTHER(Color(0xFF5E5C5C), Icons.Filled.Apps, R.string.expense_screen_other),
+    INCOME(Color(0xFF5E5C5C), Icons.Filled.Apps, R.string.expense_screen_income)
 }

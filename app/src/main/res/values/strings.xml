@@ -39,6 +39,7 @@
     <string name="expense_screen_health">Health</string>
     <string name="expense_screen_home">Home</string>
     <string name="expense_screen_other">Other</string>
+    <string name="expense_screen_income">Income</string>
 
     <!--Home screen-->
     <string name="available_balance">Available balance</string>

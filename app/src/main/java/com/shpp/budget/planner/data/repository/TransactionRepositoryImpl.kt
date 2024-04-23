@@ -76,17 +76,41 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
                                         0
                                     )
                             expenses += transaction
-                            Log.d(LOG_TAG, transaction.toString())
                             trySend(Result.success(expenses))
                         }
                     }
                     .addOnFailureListener {
-
                         trySend(Result.failure(it))
                     }
                 awaitClose()
             }.first()
         }
+
+    override suspend fun getIncomes(userUID: String): Result<List<Transaction.Income>> {
+        val income = mutableListOf<Transaction.Income>()
+        return withContext(Dispatchers.IO) {
+            callbackFlow<Result<List<Transaction.Income>>> {
+                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$INCOME_COLLECTION_NAME")
+                    .get()
+                    .addOnSuccessListener {
+                        it.documents.forEach { doc ->
+                            income += doc.toObject(Transaction.Income::class.java)
+                                ?: Transaction.Income(
+                                    0,
+                                    0,
+                                    0,
+                                    0.0f
+                                )
+                        }
+                        trySend(Result.success(income))
+                    }
+                    .addOnFailureListener {
+                        trySend(Result.failure(it))
+                    }
+                awaitClose()
+            }.first()
+        }
+    }
 
     override suspend fun getIncomeSum(userUID: String): Result<Double> =
         withContext(Dispatchers.IO) {
@@ -127,23 +151,15 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
         }
 
     override suspend fun getExpenseByMonths(userUID: String): Result<List<Float>> {
-        val expensesList = getExpenses(userUID)
-        return withContext(Dispatchers.IO) {
-            callbackFlow<Result<List<Float>>> {
-                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$EXPENSE_COLLECTION_NAME")
-                    .get()
-                    .addOnSuccessListener {
-                        val result = MutableList(12) { 0.0f }
-                        expensesList.getOrNull()?.forEach {
-                            result[it.month] = it.amount
-                        }
-                        trySend(Result.success(result))
-                    }
-                    .addOnFailureListener {
-                        trySend(Result.failure(it))
-                    }
-                awaitClose()
-            }.first()
+        val expensesList = getExpenses(userUID).getOrNull()
+        val result = MutableList(12) { 0.0f }
+        return try {
+            expensesList?.forEach {
+                result[it.month] = it.amount
+            }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
