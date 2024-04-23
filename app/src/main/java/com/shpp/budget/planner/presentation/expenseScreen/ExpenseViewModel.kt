@@ -1,6 +1,5 @@
 package com.shpp.budget.planner.presentation.expenseScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shpp.budget.planner.domain.model.TransactionItem
@@ -14,8 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
@@ -69,7 +66,13 @@ class ExpenseViewModel @Inject constructor(
                 .mapValues { (_, items) ->
                     val newDate = items.maxByOrNull { formatter.parse(it.date) }?.date ?: ""
                     val sumAmount = items.sumOf { it.amount.toDouble() }.toFloat()
-                    TransactionItem(items.first().type, items.first().name, newDate, sumAmount, items.first().color)
+                    TransactionItem(
+                        items.first().type,
+                        items.first().name,
+                        newDate,
+                        sumAmount,
+                        items.first().color
+                    )
                 }
                 .values
                 .sortedByDescending { formatter.parse(it.date) }
@@ -80,7 +83,13 @@ class ExpenseViewModel @Inject constructor(
                 .mapValues { (_, items) ->
                     val newDate = items.maxByOrNull { formatter.parse(it.date) }?.date ?: ""
                     val sumAmount = items.sumOf { it.amount.toDouble() }.toFloat()
-                    TransactionItem(items.first().type, items.first().name, newDate, sumAmount, items.first().color)
+                    TransactionItem(
+                        items.first().type,
+                        items.first().name,
+                        newDate,
+                        sumAmount,
+                        items.first().color
+                    )
                 }
                 .values
                 .sortedByDescending { formatter.parse(it.date) }
