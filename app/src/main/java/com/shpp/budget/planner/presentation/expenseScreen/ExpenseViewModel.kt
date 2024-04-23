@@ -13,6 +13,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,26 +62,28 @@ class ExpenseViewModel @Inject constructor(
                     }
                 }
 
+            val formatter = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
+
             val groupedExpenses = expenses.value
                 .groupBy { it.type }
                 .mapValues { (_, items) ->
-                    val newDate = items.maxByOrNull { it.date }?.date ?: ""
+                    val newDate = items.maxByOrNull { formatter.parse(it.date) }?.date ?: ""
                     val sumAmount = items.sumOf { it.amount.toDouble() }.toFloat()
                     TransactionItem(items.first().type, items.first().name, newDate, sumAmount, items.first().color)
                 }
                 .values
-                .sortedByDescending { it.date }
+                .sortedByDescending { formatter.parse(it.date) }
                 .toList()
 
             val groupedIncomes = incomes.value
                 .groupBy { it.type }
                 .mapValues { (_, items) ->
-                    val newDate = items.maxByOrNull { it.date }?.date ?: ""
+                    val newDate = items.maxByOrNull { formatter.parse(it.date) }?.date ?: ""
                     val sumAmount = items.sumOf { it.amount.toDouble() }.toFloat()
                     TransactionItem(items.first().type, items.first().name, newDate, sumAmount, items.first().color)
                 }
                 .values
-                .sortedByDescending { it.date }
+                .sortedByDescending { formatter.parse(it.date) }
                 .toList()
 
             transactions.update {
