@@ -3,6 +3,7 @@ package com.shpp.budget.planner.presentation.expenseScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shpp.budget.planner.domain.model.TransactionItem
+import com.shpp.budget.planner.domain.model.TransactionItem.Companion.TRANSACTION_ITEM_DATE_FORMAT
 import com.shpp.budget.planner.domain.model.toTransactionItem
 import com.shpp.budget.planner.domain.useCases.transactions.GetBudgetUseCase
 import com.shpp.budget.planner.domain.useCases.transactions.GetExpensesByMonthsUseCase
@@ -59,47 +60,33 @@ class ExpenseViewModel @Inject constructor(
                     }
                 }
 
-            val formatter = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
-
-            val groupedExpenses = expenses.value
-                .groupBy { it.type }
-                .mapValues { (_, items) ->
-                    val newDate = items.maxByOrNull { formatter.parse(it.date) }?.date ?: ""
-                    val sumAmount = items.sumOf { it.amount.toDouble() }.toFloat()
-                    TransactionItem(
-                        items.first().type,
-                        items.first().name,
-                        newDate,
-                        sumAmount,
-                        items.first().color
-                    )
-                }
-                .values
-                .sortedByDescending { formatter.parse(it.date) }
-                .toList()
-
-            val groupedIncomes = incomes.value
-                .groupBy { it.type }
-                .mapValues { (_, items) ->
-                    val newDate = items.maxByOrNull { formatter.parse(it.date) }?.date ?: ""
-                    val sumAmount = items.sumOf { it.amount.toDouble() }.toFloat()
-                    TransactionItem(
-                        items.first().type,
-                        items.first().name,
-                        newDate,
-                        sumAmount,
-                        items.first().color
-                    )
-                }
-                .values
-                .sortedByDescending { formatter.parse(it.date) }
-                .toList()
-
+            val groupedExpenses = getTransactionsGroupedSums(expenses.value)
+            val groupedIncomes = getTransactionsGroupedSums(incomes.value)
             transactions.update {
                 groupedIncomes + groupedExpenses
             }
 
         }
+    }
+
+    private fun getTransactionsGroupedSums(list: List<TransactionItem>): List<TransactionItem> {
+        val formatter = SimpleDateFormat(TRANSACTION_ITEM_DATE_FORMAT, Locale.getDefault())
+        return list
+            .groupBy { it.type }
+            .mapValues { (_, items) ->
+                val newDate = items.maxByOrNull { formatter.parse(it.date) }?.date ?: ""
+                val sumAmount = items.sumOf { it.amount.toDouble() }.toFloat()
+                TransactionItem(
+                    items.first().type,
+                    items.first().name,
+                    newDate,
+                    sumAmount,
+                    items.first().color
+                )
+            }
+            .values
+            .sortedByDescending { formatter.parse(it.date) }
+            .toList()
     }
 
 }
