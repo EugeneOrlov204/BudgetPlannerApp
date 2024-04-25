@@ -25,7 +25,7 @@ class ExpenseViewModel @Inject constructor(
     private val getIncomesUseCase: GetIncomesUseCase
 ) : ViewModel() {
 
-    val expensesByMonths: MutableStateFlow<List<Float>> = MutableStateFlow(mutableListOf())
+    val expensesByMonths: MutableStateFlow<List<Float>> = MutableStateFlow(MutableList(12) { 0.0f })
     val budget: MutableStateFlow<Double> = MutableStateFlow(0.0)
     val expenses: MutableStateFlow<List<TransactionItem>> = MutableStateFlow(mutableListOf())
     val incomes: MutableStateFlow<List<TransactionItem>> = MutableStateFlow(mutableListOf())
@@ -35,7 +35,7 @@ class ExpenseViewModel @Inject constructor(
         viewModelScope.launch {
 
             expensesByMonths.update {
-                getExpensesByMonthsUseCase()?.getOrNull() ?: emptyList()
+                getExpensesByMonthsUseCase()?.getOrNull() ?: MutableList(12) { 0.0f }
             }
 
             budget.update {

@@ -128,7 +128,7 @@ fun ExpenseScreen(
 @Composable
 fun ExpenseScreenContent(
     totalBudget: Double = 0.0,
-    expensesByMonths: List<Float> = emptyList()
+    expensesByMonths: List<Float> = List(Month.entries.size) { 0.0f }
 ) {
     Column(
         modifier = Modifier
