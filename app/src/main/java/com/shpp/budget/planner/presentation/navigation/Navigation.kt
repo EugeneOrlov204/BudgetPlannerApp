@@ -48,7 +48,7 @@ fun Navigation() {
                 when (it) {
                     BottomBarScreen.HOME ->
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Home.route) {
-                            navController.navigate(Screen.Home.route)
+                            navigateWithPopUp(Screen.Home.route)
                         }
 
                     else -> {}
@@ -60,12 +60,12 @@ fun Navigation() {
                 when (it) {
                     BottomBarScreen.HOME ->
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Home.route) {
-                            navController.navigateUp()
+                            navigateWithPopUp(Screen.Home.route, Screen.Home.route)
                         }
 
                     BottomBarScreen.WALLET -> {
                         navController.performIfCurrentDestinationDoesntMatch(Screen.Expense.route) {
-                            navController.navigate(Screen.Expense.route)
+                            navigateWithPopUp(Screen.Home.route, Screen.Expense.route)
                         }
                     }
 
@@ -106,5 +106,16 @@ fun NavController.performIfCurrentDestinationDoesntMatch(
 ) {
     if (currentDestination?.route != secondDestination) {
         action()
+    }
+}
+
+fun NavController.navigateWithPopUp(
+    popUpTo: String,
+    route: String = popUpTo
+) {
+    navigate(route = route) {
+        popUpTo(popUpTo) {
+            inclusive = popUpTo == route
+        }
     }
 }
