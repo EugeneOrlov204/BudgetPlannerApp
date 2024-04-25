@@ -1,6 +1,5 @@
 package com.shpp.budget.planner.data.repository
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shpp.budget.planner.data.model.Transaction
 import com.shpp.budget.planner.domain.repository.TransactionsRepository
@@ -19,8 +18,6 @@ const val CATEGORY_FIELD_KEY = "category"
 const val TRANSACTION_COLLECTION_NAME = "transactions"
 const val EXPENSE_COLLECTION_NAME = "expense"
 const val INCOME_COLLECTION_NAME = "income"
-
-const val LOG_TAG = "LOG_TAG"
 
 class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFirestore) :
     TransactionsRepository {
@@ -112,50 +109,38 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
         }
     }
 
-    override suspend fun getIncomeSum(userUID: String): Result<Double> =
-        withContext(Dispatchers.IO) {
-            callbackFlow<Result<Double>> {
-                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$INCOME_COLLECTION_NAME")
-                    .get()
-                    .addOnSuccessListener {
-                        var result = 0.0
-                        it.documents.forEach { doc ->
-                            result += doc[AMOUNT_FIELD_KEY] as Double
-                        }
-                        trySend(Result.success(result))
-                    }
-                    .addOnFailureListener {
-                        trySend(Result.failure(it))
-                    }
-                awaitClose()
-            }.first()
+    override suspend fun getIncomeSum(userUID: String): Result<Double> {
+        var result = 0.0
+        return try {
+            val incomes = getIncomes(userUID).getOrThrow()
+            incomes.forEach { income ->
+                result += income.amount
+            }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
 
-    override suspend fun getExpenseSum(userUID: String): Result<Double> =
-        withContext(Dispatchers.IO) {
-            callbackFlow<Result<Double>> {
-                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$EXPENSE_COLLECTION_NAME")
-                    .get()
-                    .addOnSuccessListener {
-                        var result = 0.0
-                        it.documents.forEach { doc ->
-                            result += (doc[AMOUNT_FIELD_KEY] as Double)
-                        }
-                        trySend(Result.success(result))
-                    }
-                    .addOnFailureListener {
-                        trySend(Result.failure(it))
-                    }
-                awaitClose()
-            }.first()
+    override suspend fun getExpenseSum(userUID: String): Result<Double> {
+        var result = 0.0
+        return try {
+            val expenses = getExpenses(userUID).getOrThrow()
+            expenses.forEach { expense ->
+                result += expense.amount
+            }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
 
     override suspend fun getExpenseByMonths(userUID: String): Result<List<Float>> {
         val expensesList = getExpenses(userUID).getOrNull()
         val result = MutableList(12) { 0.0f }
         return try {
             expensesList?.forEach {
-                result[it.month] = it.amount
+                result[it.month] += it.amount
             }
             Result.success(result)
         } catch (e: Exception) {
