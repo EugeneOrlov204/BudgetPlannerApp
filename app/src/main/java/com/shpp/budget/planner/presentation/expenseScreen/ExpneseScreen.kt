@@ -149,7 +149,7 @@ fun ExpenseScreenContent(
             points = expensesByMonths,
             paddingSpace = 20.dp,
         )
-        BudgetProgress(totalBudget = totalBudget, currentBudget = 650)
+        BudgetProgress(totalBudget = totalBudget, currentBudget = totalBudget.toInt())
 
     }
 }
