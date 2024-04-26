@@ -3,8 +3,8 @@ package com.shpp.budget.planner.presentation.expenseScreen
 import android.graphics.Paint
 import android.graphics.PointF
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -19,19 +19,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -44,10 +48,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -55,11 +59,11 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shpp.budget.planner.R
-import com.shpp.budget.planner.domain.model.Transaction
+import com.shpp.budget.planner.domain.model.TransactionItem
 import com.shpp.budget.planner.presentation.components.BottomAppBar
 import com.shpp.budget.planner.presentation.components.BottomBarScreen
-import com.shpp.budget.planner.presentation.navigation.Screen
 import com.shpp.budget.planner.presentation.theme.BudgetPlannerAppTheme
 import com.shpp.budget.planner.presentation.utils.ext.toReducedNumberFormat
 import java.time.Month
@@ -70,15 +74,21 @@ import java.time.Month
 @Composable
 fun Preview() {
     BudgetPlannerAppTheme {
-        ExpenseScreen({}) {
-
-        }
+        ExpenseScreen()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit, onPlusClick: () -> Unit) {
+fun ExpenseScreen(
+    viewModel: ExpenseViewModel = hiltViewModel(),
+    onScreenClick: (screen: BottomBarScreen) -> Unit = {},
+    onPlusClick: () -> Unit = {}
+) {
+    val expensesByMonths = viewModel.expensesByMonths.collectAsState().value
+    val budget = viewModel.budget.collectAsState().value
+    val transactions = viewModel.transactions.collectAsState().value
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -100,30 +110,26 @@ fun ExpenseScreen(onScreenClick: (screen: BottomBarScreen) -> Unit, onPlusClick:
             ),
             sheetContent = {
                 TransactionsColumn(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth(),
-                    //Todo get list from viewModel
-                    List(12) {
-                        Transaction(
-                            typeName = "car",
-                            date = "11 March 2024",
-                            transactionAmount = 500f
-                        )
-                    },
+                    transactionItems = transactions
                 )
+                Spacer(modifier = Modifier.height(100.dp))
             },
             sheetPeekHeight = (LocalConfiguration.current.screenHeightDp * 0.42).dp
         ) {
-            ExpenseScreenContent()
+            ExpenseScreenContent(budget, expensesByMonths)
         }
     }
 
 
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
-fun ExpenseScreenContent() {
+fun ExpenseScreenContent(
+    totalBudget: Double = 0.0,
+    expensesByMonths: List<Float> = List(Month.entries.size) { 0.0f }
+) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -140,23 +146,10 @@ fun ExpenseScreenContent() {
                 .fillMaxWidth()
                 .fillMaxHeight(0.4f),
             Month.entries.map { it.toString().take(3) },
-            points = listOf(
-                1000f,
-                204f,
-                4556f,
-                7000f,
-                945f,
-                33f,
-                4200f,
-                9233f,
-                1123f,
-                735f,
-                8004f,
-                260f
-            ),
+            points = expensesByMonths,
             paddingSpace = 20.dp,
         )
-        BudgetProgress(totalBudget = 1000, currentBudget = 650)
+        BudgetProgress(totalBudget = totalBudget, currentBudget = totalBudget.toInt())
 
     }
 }
@@ -313,7 +306,9 @@ fun Graph(
             /**drawing curve */
             val stroke = Path().apply {
                 reset()
-                moveTo(coordinates.first().x, coordinates.first().y)
+                if (coordinates.isNotEmpty()) {
+                    moveTo(coordinates.first().x, coordinates.first().y)
+                }
                 for (i in 0 until coordinates.size - 1) {
                     cubicTo(
                         controlPoints1[i].x, controlPoints1[i].y,
@@ -429,7 +424,11 @@ fun Graph(
  * returns the value for the y-scale in the graph
  */
 fun getYValues(points: List<Float>): MutableList<Int> {
-    val max = points.max().toInt()
+    var max = 100
+    if (points.isNotEmpty()) {
+        max = points.max().toInt()
+    }
+
     var multiplier = 1
     repeat(max.toString().length - 1) { multiplier *= 10 }
     val yValues: MutableList<Int> = mutableListOf()
@@ -440,7 +439,7 @@ fun getYValues(points: List<Float>): MutableList<Int> {
 }
 
 @Composable
-fun BudgetProgress(totalBudget: Int, currentBudget: Int) {
+fun BudgetProgress(totalBudget: Double, currentBudget: Int) {
 
     Column(
         modifier = Modifier
@@ -490,7 +489,7 @@ fun BudgetProgress(totalBudget: Int, currentBudget: Int) {
 @Composable
 fun TransactionsColumn(
     modifier: Modifier,
-    transactionItems: List<Transaction>,
+    transactionItems: List<TransactionItem>,
     onClick: () -> Unit = {}
 ) {
     Column(
@@ -507,14 +506,20 @@ fun TransactionsColumn(
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
         )
         for (t in transactionItems) {
-            TransactionItem(t.typeName, t.date, t.transactionAmount)
+            TransactionItem(
+                icon = t.type,
+                name = t.name,
+                date = t.date,
+                amount = t.amount,
+                color = t.color
+            )
         }
 
     }
 }
 
 @Composable
-fun TransactionItem(transactionType: String, transactionDate: String, transactionAmount: Float) {
+fun TransactionItem(icon: ImageVector, name: Int, date: String, amount: Float, color: Color) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -530,39 +535,53 @@ fun TransactionItem(transactionType: String, transactionDate: String, transactio
             )
     ) {
 
-        Image(
-            painter = painterResource(R.drawable.car_ic),
-            contentDescription = null,
-            modifier = Modifier.padding(
-                start = dimensionResource(R.dimen.expense_screen_transaction_icon_padding),
-                top = dimensionResource(R.dimen.expense_screen_transaction_icon_padding),
-                bottom = dimensionResource(id = R.dimen.expense_screen_transaction_icon_padding)
-            )
-        )
-        Spacer(
-            modifier =
-            Modifier.width(dimensionResource(R.dimen.expense_screen_space_between_transaction_image_and_text))
-        )
-        Column(
-            modifier = Modifier.weight(1f)
+        Row(
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.expense_screen_transaction_icon_padding))
         ) {
-            Text(
-                text = transactionType,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+            Icon(
+                modifier = Modifier
+                    .background(
+                        color = Color.Transparent,
+                        shape = CircleShape
+                    )
+
+                    .border(
+                        width = dimensionResource(id = R.dimen.add_screen_category_icon_boarder_width),
+                        shape = CircleShape,
+                        color = color
+                    )
+                    .clip(CircleShape)
+                    .padding(dimensionResource(id = R.dimen.add_screen_category_icon_padding)),
+                imageVector = icon,
+                contentDescription = stringResource(id = name),
+                tint = color
             )
             Spacer(
-                modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_divide_transaction_item_text_space))
+                modifier =
+                Modifier.width(dimensionResource(R.dimen.expense_screen_space_between_transaction_image_and_text))
             )
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stringResource(id = name),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+                )
+                Spacer(
+                    modifier = Modifier.height(dimensionResource(R.dimen.expense_screen_divide_transaction_item_text_space))
+                )
+                Text(
+                    text = date,
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Normal)
+                )
+            }
             Text(
-                text = transactionDate,
-                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Normal)
+                text = amount.toString(),
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
             )
+            Spacer(modifier = Modifier.weight(0.1f))
         }
-        Text(
-            text = transactionAmount.toString(),
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
-        )
-        Spacer(modifier = Modifier.weight(0.1f))
     }
 }
 

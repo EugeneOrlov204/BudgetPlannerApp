@@ -22,5 +22,5 @@ object Dependencies {
     const val hiltVersion = "2.50"
     const val hiltNavVersion = "1.2.0"
     const val shapesVersion = "1.0.0-alpha05"
-    const val firestore = "24.11.0"
+    const val firestore = "24.11.1"
 }

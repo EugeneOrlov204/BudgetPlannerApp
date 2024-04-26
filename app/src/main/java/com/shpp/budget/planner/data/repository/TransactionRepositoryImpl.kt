@@ -54,4 +54,98 @@ class TransactionRepositoryImpl @Inject constructor(private val db: FirebaseFire
                 awaitClose()
             }.first()
         }
+
+    override suspend fun getExpenses(userUID: String): Result<List<Transaction.Expense>> =
+        withContext(Dispatchers.IO) {
+            callbackFlow<Result<List<Transaction.Expense>>> {
+                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$EXPENSE_COLLECTION_NAME")
+                    .get()
+                    .addOnSuccessListener {
+                        val expenses = mutableListOf<Transaction.Expense>()
+                        it.documents.forEach { doc ->
+                            val transaction =
+                                doc.toObject(Transaction.Expense::class.java)
+                                    ?: Transaction.Expense(
+                                        0,
+                                        0,
+                                        0,
+                                        0.0f,
+                                        0
+                                    )
+                            expenses += transaction
+                            trySend(Result.success(expenses))
+                        }
+                    }
+                    .addOnFailureListener {
+                        trySend(Result.failure(it))
+                    }
+                awaitClose()
+            }.first()
+        }
+
+    override suspend fun getIncomes(userUID: String): Result<List<Transaction.Income>> {
+        val income = mutableListOf<Transaction.Income>()
+        return withContext(Dispatchers.IO) {
+            callbackFlow<Result<List<Transaction.Income>>> {
+                db.collection("$TRANSACTION_COLLECTION_NAME/$userUID/$INCOME_COLLECTION_NAME")
+                    .get()
+                    .addOnSuccessListener {
+                        it.documents.forEach { doc ->
+                            income += doc.toObject(Transaction.Income::class.java)
+                                ?: Transaction.Income(
+                                    0,
+                                    0,
+                                    0,
+                                    0.0f
+                                )
+                        }
+                        trySend(Result.success(income))
+                    }
+                    .addOnFailureListener {
+                        trySend(Result.failure(it))
+                    }
+                awaitClose()
+            }.first()
+        }
+    }
+
+    override suspend fun getIncomeSum(userUID: String): Result<Double> {
+        var result = 0.0
+        return try {
+            val incomes = getIncomes(userUID).getOrThrow()
+            incomes.forEach { income ->
+                result += income.amount
+            }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getExpenseSum(userUID: String): Result<Double> {
+        var result = 0.0
+        return try {
+            val expenses = getExpenses(userUID).getOrThrow()
+            expenses.forEach { expense ->
+                result += expense.amount
+            }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getExpenseByMonths(userUID: String): Result<List<Float>> {
+        val expensesList = getExpenses(userUID).getOrNull()
+        val result = MutableList(12) { 0.0f }
+        return try {
+            expensesList?.forEach {
+                result[it.month] += it.amount
+            }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }

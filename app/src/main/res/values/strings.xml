@@ -30,6 +30,16 @@
     <string name="expense_screen_month_budget">Budget for this month</string>
     <string name="expense_screen_to_transaction_screen_button_text">See all</string>
     <string name="expense_screen_total_balance">Total balance</string>
+    <string name="expense_screen_beauty">Beauty</string>
+    <string name="expense_screen_car">Car</string>
+    <string name="expense_screen_clothes">Clothes</string>
+    <string name="expense_screen_donation">Donation</string>
+    <string name="expense_screen_food">Food</string>
+    <string name="expense_screen_gift">Gift</string>
+    <string name="expense_screen_health">Health</string>
+    <string name="expense_screen_home">Home</string>
+    <string name="expense_screen_other">Other</string>
+    <string name="expense_screen_income">Income</string>
 
     <!--Home screen-->
     <string name="available_balance">Available balance</string>

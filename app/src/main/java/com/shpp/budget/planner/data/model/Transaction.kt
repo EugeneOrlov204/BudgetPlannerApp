@@ -7,17 +7,17 @@ sealed class Transaction(
     open val amount: Float
 ) {
     data class Expense(
-        override val year: Int,
-        override val month: Int,
-        override val day: Int,
-        override val amount: Float,
-        val category: Int?
+        override val year: Int = 0,
+        override val month: Int = 0,
+        override val day: Int = 0,
+        override val amount: Float = 0.0f,
+        val category: Int? = 8
     ) : Transaction(year, month, day, amount)
 
     data class Income(
-        override val year: Int,
-        override val month: Int,
-        override val day: Int,
-        override val amount: Float
+        override val year: Int = 0,
+        override val month: Int = 0,
+        override val day: Int = 0,
+        override val amount: Float = 0.0f
     ) : Transaction(year, month, day, amount)
 }

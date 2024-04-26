@@ -22,6 +22,6 @@ enum class TransactionCategory(val color: Color, val icon: ImageVector) {
     GIFT(Color(0xFF0076E3), Icons.Filled.CardGiftcard),
     HEALTH(Color(0xFF1ABF97), Icons.Filled.Healing),
     HOME(Color(0xFFFF5843), Icons.Filled.Home),
-    OTHER(Color(0xFF5E5C5C),Icons.Filled.Apps)
+    OTHER(Color(0xFF5E5C5C), Icons.Filled.Apps)
 
 }
